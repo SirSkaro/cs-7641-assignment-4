@@ -19,7 +19,6 @@ import burlap.mdp.auxiliary.common.SinglePFTF;
 import burlap.mdp.auxiliary.stateconditiontest.TFGoalCondition;
 import burlap.mdp.core.TerminalFunction;
 import burlap.mdp.core.oo.propositional.PropositionalFunction;
-import burlap.mdp.singleagent.SADomain;
 import burlap.mdp.singleagent.common.GoalBasedRF;
 import burlap.mdp.singleagent.environment.SimulatedEnvironment;
 import burlap.mdp.singleagent.model.RewardFunction;
@@ -57,10 +56,6 @@ public class GridWorldProblem {
 
         ConstantStateGenerator stateGenerator = new ConstantStateGenerator(initialState);
         simulatedEnvironment = new SimulatedEnvironment(singleAgentDomain, stateGenerator);
-    }
-
-    public SADomain getSingleAgentDomain() {
-        return singleAgentDomain;
     }
 
     public EpisodeSequenceVisualizer createVisualizer(String outputDirectoryPath) {
