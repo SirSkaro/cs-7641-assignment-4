@@ -15,11 +15,18 @@ public class GridWorldExperiment {
     private static final String OUTPUT_DIRECTORY_PATH = "gridworld";
 
     public static void main(String args[]) {
-        if(args.length != 1) {
+        if(args.length != 3) {
             printUsageMessage();
         }
         String algorithm = args[0];
-        int width = 11, height = 11;
+        int width = 0, height = 0;
+        try {
+            width = Integer.parseInt(args[1]);
+            height = Integer.parseInt(args[2]);
+        } catch (NumberFormatException e) {
+            printUsageMessage();
+        }
+
         float probabilityOfSuccessfulTransition = 0.8f;
         GridWorldProblem problem = new GridWorldProblem(width, height, probabilityOfSuccessfulTransition);
 
@@ -76,7 +83,8 @@ public class GridWorldExperiment {
     }
 
     private static void printUsageMessage() {
-        System.err.println("Please specify (only) one of the following algorithms as an argument:");
+        System.err.println("Usage: [algorithm] [grid width] [grid height]");
+        System.err.println("Supported algorithms:");
         System.err.println(String.format("\t'%s' - Value Iteration", VALUE_ITERATION));
         System.err.println(String.format("\t'%s' - Policy Iteration", POLICY_ITERATION));
         System.err.println(String.format("\t'%s' - Q-Learning", Q_LEARNING));

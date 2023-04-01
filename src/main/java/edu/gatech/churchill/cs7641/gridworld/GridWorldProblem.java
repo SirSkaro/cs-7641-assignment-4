@@ -50,7 +50,7 @@ public class GridWorldProblem {
         GridWorldRewardFunction rewardFunction = new GridWorldRewardFunction(width, height, NON_GOAL_REWARD);
 
         var locations = setupHazards(width, height, rewardFunction);
-        locations.add(new GridLocation(width - 1, height - 1, GOAL_LOCATION_TYPE, "goal")); // add goal location
+        locations.add(new GridLocation(width - 1, height - 1, GOAL_LOCATION_TYPE, "goal"));
 
         gridWorld.setTf(terminalFunction);
         gridWorld.setRf(rewardFunction);
@@ -81,7 +81,7 @@ public class GridWorldProblem {
             rewardFunction.setReward(xPos, yPos, THIN_ICE_REWARD);
             locations.add(new GridLocation(xPos, yPos, THIN_ICE_LOCATION_TYPE, String.format("thin ice %d", i+1)));
         }
-        System.out.println(locations);
+
         return locations;
     }
 
