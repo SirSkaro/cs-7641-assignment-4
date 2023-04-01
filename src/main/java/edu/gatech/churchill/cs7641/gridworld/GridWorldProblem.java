@@ -10,6 +10,7 @@ import burlap.behavior.singleagent.learning.tdmethods.QLearning;
 import burlap.behavior.singleagent.planning.Planner;
 import burlap.behavior.singleagent.planning.stochastic.policyiteration.PolicyIteration;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
+import burlap.behavior.valuefunction.ValueFunction;
 import burlap.domain.singleagent.gridworld.GridWorldDomain;
 import burlap.domain.singleagent.gridworld.GridWorldVisualizer;
 import burlap.domain.singleagent.gridworld.state.GridAgent;
@@ -73,14 +74,23 @@ public class GridWorldProblem {
         return simulatedEnvironment;
     }
 
-    public Episode createValueIterationEpisode() {
+    public GridWorldAnalysis createValueIterationEpisode() {
         double maxDelta = 0.001;
         int maxIterations = 100;
         double gamma = 0.99;
 
-        Planner planner = new ValueIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxIterations);
+        ValueIteration planner = new ValueIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxIterations);
         Policy policy = planner.planFromState(initialState);
-        return PolicyUtils.rollout(policy, simulatedEnvironment);
+
+        GridWorldAnalysis analysis = new GridWorldAnalysis();
+        analysis.policy = policy;
+        analysis.episode = PolicyUtils.rollout(policy, simulatedEnvironment);
+        analysis.gui = GridWorldDomain.getGridWorldValueFunctionVisualization(
+                planner.getAllStates(),
+                gridWorld.getWidth(), gridWorld.getHeight(),
+                planner, policy);
+
+        return analysis;
     }
 
     public Episode createPolicyIterationEpisode() {

@@ -36,9 +36,10 @@ public class GridWorldExperiment {
     }
 
     private static void valueIterationExperiment(GridWorldProblem problem) {
-        Episode episode = problem.createValueIterationEpisode();
-        episode.write(OUTPUT_DIRECTORY_PATH + "/vi");
+        GridWorldAnalysis analysis = problem.createValueIterationEpisode();
+        analysis.episode.write(OUTPUT_DIRECTORY_PATH + "/vi");
 
+        analysis.gui.initGUI();
         problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
     }
 
