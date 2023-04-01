@@ -1,5 +1,6 @@
 package edu.gatech.churchill.cs7641.gridworld;
 
+import burlap.behavior.singleagent.Episode;
 import burlap.behavior.singleagent.auxiliary.performance.LearningAlgorithmExperimenter;
 import burlap.behavior.singleagent.auxiliary.performance.PerformanceMetric;
 import burlap.behavior.singleagent.auxiliary.performance.TrialMode;
@@ -12,6 +13,7 @@ public class GridWorldExperiment {
     private static final String VALUE_ITERATION = "VI";
     private static final String POLICY_ITERATION = "PI";
     private static final String Q_LEARNING = "QL";
+    private static final String OUTPUT_DIRECTORY_PATH = "gridworld";
 
     public static void main(String args[]) {
         if(args.length != 1) {
@@ -25,12 +27,26 @@ public class GridWorldExperiment {
         if(algorithm.equals(Q_LEARNING)) {
             qLearningExperiment(problem);
         } else if (algorithm.equals(VALUE_ITERATION)) {
-            System.out.println("VI");
+            valueIterationExperiment(problem);
         } else if (algorithm.equals(POLICY_ITERATION)) {
             System.out.println("PI");
         } else {
             printUsageMessage();
         }
+    }
+
+    private static void valueIterationExperiment(GridWorldProblem problem) {
+        Episode episode = problem.createValueIterationEpisode();
+        episode.write(OUTPUT_DIRECTORY_PATH + "/vi");
+
+        problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
+    }
+
+    private static void policyIterationExperiment(GridWorldProblem problem) {
+        Episode episode = problem.createPolicyIterationEpisode();
+        episode.write(OUTPUT_DIRECTORY_PATH + "/pi");
+
+        problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
     }
 
     private static void qLearningExperiment(GridWorldProblem problem) {
