@@ -2,15 +2,13 @@ package edu.gatech.churchill.cs7641.gridworld;
 
 import burlap.behavior.policy.Policy;
 import burlap.behavior.policy.PolicyUtils;
-import burlap.behavior.singleagent.Episode;
 import burlap.behavior.singleagent.auxiliary.EpisodeSequenceVisualizer;
 import burlap.behavior.singleagent.learning.LearningAgent;
 import burlap.behavior.singleagent.learning.LearningAgentFactory;
 import burlap.behavior.singleagent.learning.tdmethods.QLearning;
-import burlap.behavior.singleagent.planning.Planner;
+import burlap.behavior.singleagent.planning.stochastic.DynamicProgramming;
 import burlap.behavior.singleagent.planning.stochastic.policyiteration.PolicyIteration;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
-import burlap.behavior.valuefunction.ValueFunction;
 import burlap.domain.singleagent.gridworld.GridWorldDomain;
 import burlap.domain.singleagent.gridworld.GridWorldVisualizer;
 import burlap.domain.singleagent.gridworld.state.GridAgent;
@@ -74,7 +72,7 @@ public class GridWorldProblem {
         return simulatedEnvironment;
     }
 
-    public GridWorldAnalysis createValueIterationEpisode() {
+    public GridWorldAnalysis createValueIterationAnalysis() {
         double maxDelta = 0.001;
         int maxIterations = 100;
         double gamma = 0.99;
@@ -82,6 +80,22 @@ public class GridWorldProblem {
         ValueIteration planner = new ValueIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxIterations);
         Policy policy = planner.planFromState(initialState);
 
+        return createAnalysis(planner, policy);
+    }
+
+    public GridWorldAnalysis createPolicyIterationAnalysis() {
+        double maxDelta = 0.001;
+        int maxEvaluationIterations = 200;
+        int maxPolicyIterations = 100;
+        double gamma = 0.99;
+
+        PolicyIteration planner = new PolicyIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxEvaluationIterations, maxPolicyIterations);
+        Policy policy = planner.planFromState(initialState);
+
+        return createAnalysis(planner, policy);
+    }
+
+    private GridWorldAnalysis createAnalysis(DynamicProgramming planner, Policy policy) {
         GridWorldAnalysis analysis = new GridWorldAnalysis();
         analysis.policy = policy;
         analysis.episode = PolicyUtils.rollout(policy, simulatedEnvironment);
@@ -91,17 +105,6 @@ public class GridWorldProblem {
                 planner, policy);
 
         return analysis;
-    }
-
-    public Episode createPolicyIterationEpisode() {
-        double maxDelta = 0.001;
-        int maxEvaluationIterations = 200;
-        int maxPolicyIterations = 100;
-        double gamma = 0.99;
-
-        Planner planner = new PolicyIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxEvaluationIterations, maxPolicyIterations);
-        Policy policy = planner.planFromState(initialState);
-        return PolicyUtils.rollout(policy, simulatedEnvironment);
     }
 
     public LearningAgentFactory createQLearningAgentFactory() {

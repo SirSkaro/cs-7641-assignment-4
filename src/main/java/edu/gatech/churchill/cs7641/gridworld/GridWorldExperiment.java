@@ -1,6 +1,5 @@
 package edu.gatech.churchill.cs7641.gridworld;
 
-import burlap.behavior.singleagent.Episode;
 import burlap.behavior.singleagent.auxiliary.performance.LearningAlgorithmExperimenter;
 import burlap.behavior.singleagent.auxiliary.performance.PerformanceMetric;
 import burlap.behavior.singleagent.auxiliary.performance.TrialMode;
@@ -36,7 +35,7 @@ public class GridWorldExperiment {
     }
 
     private static void valueIterationExperiment(GridWorldProblem problem) {
-        GridWorldAnalysis analysis = problem.createValueIterationEpisode();
+        GridWorldAnalysis analysis = problem.createValueIterationAnalysis();
         analysis.episode.write(OUTPUT_DIRECTORY_PATH + "/vi");
 
         analysis.gui.initGUI();
@@ -44,9 +43,10 @@ public class GridWorldExperiment {
     }
 
     private static void policyIterationExperiment(GridWorldProblem problem) {
-        Episode episode = problem.createPolicyIterationEpisode();
-        episode.write(OUTPUT_DIRECTORY_PATH + "/pi");
+        GridWorldAnalysis analysis = problem.createPolicyIterationAnalysis();
+        analysis.episode.write(OUTPUT_DIRECTORY_PATH + "/pi");
 
+        analysis.gui.initGUI();
         problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
     }
 
