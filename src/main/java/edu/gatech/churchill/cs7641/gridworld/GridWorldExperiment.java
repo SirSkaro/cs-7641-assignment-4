@@ -29,7 +29,7 @@ public class GridWorldExperiment {
         } else if (algorithm.equals(VALUE_ITERATION)) {
             valueIterationExperiment(problem);
         } else if (algorithm.equals(POLICY_ITERATION)) {
-            System.out.println("PI");
+            policyIterationExperiment(problem);
         } else {
             printUsageMessage();
         }
