@@ -11,27 +11,27 @@ import burlap.behavior.singleagent.planning.stochastic.policyiteration.PolicyIte
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
 import burlap.domain.singleagent.gridworld.GridWorldDomain;
 import burlap.domain.singleagent.gridworld.GridWorldRewardFunction;
+import burlap.domain.singleagent.gridworld.GridWorldTerminalFunction;
 import burlap.domain.singleagent.gridworld.GridWorldVisualizer;
 import burlap.domain.singleagent.gridworld.state.GridAgent;
 import burlap.domain.singleagent.gridworld.state.GridLocation;
 import burlap.domain.singleagent.gridworld.state.GridWorldState;
 import burlap.mdp.auxiliary.common.ConstantStateGenerator;
-import burlap.mdp.auxiliary.common.SinglePFTF;
-import burlap.mdp.auxiliary.stateconditiontest.TFGoalCondition;
-import burlap.mdp.core.TerminalFunction;
-import burlap.mdp.core.oo.propositional.PropositionalFunction;
-import burlap.mdp.singleagent.common.GoalBasedRF;
 import burlap.mdp.singleagent.environment.SimulatedEnvironment;
-import burlap.mdp.singleagent.model.RewardFunction;
 import burlap.mdp.singleagent.oo.OOSADomain;
 import burlap.statehashing.simple.SimpleHashableStateFactory;
 import burlap.visualizer.Visualizer;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class GridWorldProblem {
 
-    private static final float GOAL_REWARD = 5;
     private static final float NON_GOAL_REWARD = -0.1f;
-    private static final float OBSTACLE_REWARD = -1;
+    private static final float THIN_ICE_REWARD = -1f;
+    private static final int GOAL_LOCATION_TYPE = 0;
+    private static final int THIN_ICE_LOCATION_TYPE = 1;
 
     private OOSADomain singleAgentDomain;
     private GridWorldDomain gridWorld;
@@ -43,22 +43,46 @@ public class GridWorldProblem {
         gridWorld = new GridWorldDomain(width, height);
         gridWorld.setMapToFourRooms();
         gridWorld.setProbSucceedTransitionDynamics(probabilityOfSuccessfulTransition);
+        gridWorld.setNumberOfLocationTypes(2);
 
-        TerminalFunction terminalFunction = new SinglePFTF(PropositionalFunction.findPF(gridWorld.generatePfs(), GridWorldDomain.PF_AT_LOCATION));
+        GridWorldTerminalFunction terminalFunction = new GridWorldTerminalFunction();
+        terminalFunction.markAsTerminalPosition(width - 1, height - 1); // Top right is the goal state
         GridWorldRewardFunction rewardFunction = new GridWorldRewardFunction(width, height, NON_GOAL_REWARD);
-        rewardFunction.setReward(width - 1, height - 1, GOAL_REWARD);
+
+        var locations = setupHazards(width, height, rewardFunction);
+        locations.add(new GridLocation(width - 1, height - 1, GOAL_LOCATION_TYPE, "goal")); // add goal location
 
         gridWorld.setTf(terminalFunction);
         gridWorld.setRf(rewardFunction);
 
         // Don't know if the order of these functions matters
         singleAgentDomain = gridWorld.generateDomain();
-        // Put starting state in bottom left and the goal state in top right corner
-        initialState = new GridWorldState(new GridAgent(0, 0), new GridLocation(width - 1, height - 1, "loc0"));
+        initialState = new GridWorldState(new GridAgent(0, 0), locations);
         hashingFactory = new SimpleHashableStateFactory();
 
         ConstantStateGenerator stateGenerator = new ConstantStateGenerator(initialState);
         simulatedEnvironment = new SimulatedEnvironment(singleAgentDomain, stateGenerator);
+    }
+
+    private List<GridLocation> setupHazards(int width, int height, GridWorldRewardFunction rewardFunction) {
+        int[][] map = gridWorld.getMap();
+        int numHazards = (width * height) / 5; //1 hazard per 5 squares
+        Random random = new Random(map.length);
+        var locations = new ArrayList<GridLocation>();
+
+        for(int i=0; i < numHazards; i++) {
+            int xPos = random.nextInt(width);
+            int yPos = random.nextInt(height);
+
+            if(map[xPos][yPos] == 1) { //if this is a wall, generate again
+                i--;
+                continue;
+            }
+            rewardFunction.setReward(xPos, yPos, THIN_ICE_REWARD);
+            locations.add(new GridLocation(xPos, yPos, THIN_ICE_LOCATION_TYPE, String.format("thin ice %d", i+1)));
+        }
+        System.out.println(locations);
+        return locations;
     }
 
     public EpisodeSequenceVisualizer createVisualizer(String outputDirectoryPath) {
