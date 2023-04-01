@@ -9,10 +9,31 @@ import burlap.mdp.singleagent.environment.SimulatedEnvironment;
 
 public class GridWorldExperiment {
 
+    private static final String VALUE_ITERATION = "VI";
+    private static final String POLICY_ITERATION = "PI";
+    private static final String Q_LEARNING = "QL";
+
     public static void main(String args[]) {
+        if(args.length != 1) {
+            printUsageMessage();
+        }
+        String algorithm = args[0];
         int width = 11, height = 11;
         float probabilityOfSuccessfulTransition = 0.8f;
         GridWorldProblem problem = new GridWorldProblem(width, height, probabilityOfSuccessfulTransition);
+
+        if(algorithm.equals(Q_LEARNING)) {
+            qLearningExperiment(problem);
+        } else if (algorithm.equals(VALUE_ITERATION)) {
+            System.out.println("VI");
+        } else if (algorithm.equals(POLICY_ITERATION)) {
+            System.out.println("PI");
+        } else {
+            printUsageMessage();
+        }
+    }
+
+    private static void qLearningExperiment(GridWorldProblem problem) {
         LearningAgentFactory[] agentFactories = new LearningAgentFactory[]{
                 problem.createQLearningAgentFactory()
         };
@@ -31,6 +52,14 @@ public class GridWorldExperiment {
                 PerformanceMetric.AVERAGE_EPISODE_REWARD);
 
         return experimenter;
+    }
+
+    private static void printUsageMessage() {
+        System.err.println("Please specify (only) one of the following algorithms as an argument:");
+        System.err.println(String.format("\t'%s' - Value Iteration", VALUE_ITERATION));
+        System.err.println(String.format("\t'%s' - Policy Iteration", POLICY_ITERATION));
+        System.err.println(String.format("\t'%s' - Q-Learning", Q_LEARNING));
+        System.exit(1);
     }
 
 }
