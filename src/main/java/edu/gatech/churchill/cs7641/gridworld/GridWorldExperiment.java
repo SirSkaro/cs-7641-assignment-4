@@ -14,7 +14,7 @@ public class GridWorldExperiment {
     private static final String Q_LEARNING = "QL";
     private static final String OUTPUT_DIRECTORY_PATH = "gridworld";
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         if(args.length != 3) {
             printUsageMessage();
         }
@@ -30,14 +30,11 @@ public class GridWorldExperiment {
         float probabilityOfSuccessfulTransition = 0.8f;
         GridWorldProblem problem = new GridWorldProblem(width, height, probabilityOfSuccessfulTransition);
 
-        if(algorithm.equals(Q_LEARNING)) {
-            qLearningExperiment(problem);
-        } else if (algorithm.equals(VALUE_ITERATION)) {
-            valueIterationExperiment(problem);
-        } else if (algorithm.equals(POLICY_ITERATION)) {
-            policyIterationExperiment(problem);
-        } else {
-            printUsageMessage();
+        switch (algorithm) {
+            case Q_LEARNING -> qLearningExperiment(problem);
+            case VALUE_ITERATION -> valueIterationExperiment(problem);
+            case POLICY_ITERATION -> policyIterationExperiment(problem);
+            default -> printUsageMessage();
         }
     }
 

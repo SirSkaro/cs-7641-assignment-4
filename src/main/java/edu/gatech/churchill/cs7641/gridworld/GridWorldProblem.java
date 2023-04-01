@@ -41,7 +41,6 @@ public class GridWorldProblem {
 
     public GridWorldProblem(int width, int height, float probabilityOfSuccessfulTransition) {
         gridWorld = new GridWorldDomain(width, height);
-        gridWorld.setMapToFourRooms();
         gridWorld.setProbSucceedTransitionDynamics(probabilityOfSuccessfulTransition);
         gridWorld.setNumberOfLocationTypes(2);
 
@@ -49,6 +48,7 @@ public class GridWorldProblem {
         terminalFunction.markAsTerminalPosition(width - 1, height - 1); // Top right is the goal state
         GridWorldRewardFunction rewardFunction = new GridWorldRewardFunction(width, height, NON_GOAL_REWARD);
 
+        setupWalls(width, height);
         var locations = setupHazards(width, height, rewardFunction);
         locations.add(new GridLocation(width - 1, height - 1, GOAL_LOCATION_TYPE, "goal"));
 
@@ -64,10 +64,32 @@ public class GridWorldProblem {
         simulatedEnvironment = new SimulatedEnvironment(singleAgentDomain, stateGenerator);
     }
 
+    private void setupWalls(int width, int height) {
+        //Create 4 rooms
+        gridWorld.horizontalWall(0, width-1, height/2);
+        gridWorld.verticalWall(0, height-1, width/2);
+
+        //Create 2 openings per wall. Collision is ok
+        Random random = new Random((long) width * height);
+        for(int i=0; i < 2; i++) {
+            int westWallSegmentToOpen = random.nextInt(width/2);
+            gridWorld.clearLocationOfWalls(westWallSegmentToOpen, height/2);
+
+            int eastWallSegmentToOpen = random.nextInt(width/2, width);
+            gridWorld.clearLocationOfWalls(eastWallSegmentToOpen, height/2);
+
+            int southWallSegmentToOpen = random.nextInt(height/2);
+            gridWorld.clearLocationOfWalls(width/2, southWallSegmentToOpen);
+
+            int northWallSegmentToOpen = random.nextInt(height/2, height);
+            gridWorld.clearLocationOfWalls(width/2, northWallSegmentToOpen);
+        }
+    }
+
     private List<GridLocation> setupHazards(int width, int height, GridWorldRewardFunction rewardFunction) {
         int[][] map = gridWorld.getMap();
         int numHazards = (width * height) / 5; //1 hazard per 5 squares
-        Random random = new Random(map.length);
+        Random random = new Random(numHazards);
         var locations = new ArrayList<GridLocation>();
 
         for(int i=0; i < numHazards; i++) {
