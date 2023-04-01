@@ -9,5 +9,6 @@ public class GridWorldAnalysis {
     public Policy policy;
     public Episode episode;
     public ValueFunctionVisualizerGUI gui;
+    public double optimalReward;
 
 }

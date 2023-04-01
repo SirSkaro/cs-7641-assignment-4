@@ -10,6 +10,7 @@ import burlap.behavior.singleagent.planning.stochastic.DynamicProgramming;
 import burlap.behavior.singleagent.planning.stochastic.policyiteration.PolicyIteration;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
 import burlap.domain.singleagent.gridworld.GridWorldDomain;
+import burlap.domain.singleagent.gridworld.GridWorldRewardFunction;
 import burlap.domain.singleagent.gridworld.GridWorldVisualizer;
 import burlap.domain.singleagent.gridworld.state.GridAgent;
 import burlap.domain.singleagent.gridworld.state.GridLocation;
@@ -30,6 +31,7 @@ public class GridWorldProblem {
 
     private static final float GOAL_REWARD = 5;
     private static final float NON_GOAL_REWARD = -0.1f;
+    private static final float OBSTACLE_REWARD = -1;
 
     private OOSADomain singleAgentDomain;
     private GridWorldDomain gridWorld;
@@ -43,14 +45,15 @@ public class GridWorldProblem {
         gridWorld.setProbSucceedTransitionDynamics(probabilityOfSuccessfulTransition);
 
         TerminalFunction terminalFunction = new SinglePFTF(PropositionalFunction.findPF(gridWorld.generatePfs(), GridWorldDomain.PF_AT_LOCATION));
-        RewardFunction rewardFunction = new GoalBasedRF(new TFGoalCondition(terminalFunction), GOAL_REWARD, NON_GOAL_REWARD);
+        GridWorldRewardFunction rewardFunction = new GridWorldRewardFunction(width, height, NON_GOAL_REWARD);
+        rewardFunction.setReward(width - 1, height - 1, GOAL_REWARD);
 
         gridWorld.setTf(terminalFunction);
         gridWorld.setRf(rewardFunction);
 
         // Don't know if the order of these functions matters
         singleAgentDomain = gridWorld.generateDomain();
-        // Put goal state in top right corner and starting state in bottom left
+        // Put starting state in bottom left and the goal state in top right corner
         initialState = new GridWorldState(new GridAgent(0, 0), new GridLocation(width - 1, height - 1, "loc0"));
         hashingFactory = new SimpleHashableStateFactory();
 
@@ -94,6 +97,7 @@ public class GridWorldProblem {
         GridWorldAnalysis analysis = new GridWorldAnalysis();
         analysis.policy = policy;
         analysis.episode = PolicyUtils.rollout(policy, simulatedEnvironment);
+
         analysis.gui = GridWorldDomain.getGridWorldValueFunctionVisualization(
                 planner.getAllStates(),
                 gridWorld.getWidth(), gridWorld.getHeight(),

@@ -40,6 +40,8 @@ public class GridWorldExperiment {
 
         analysis.gui.initGUI();
         problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
+
+        System.out.println(analysis.optimalReward);
     }
 
     private static void policyIterationExperiment(GridWorldProblem problem) {
@@ -48,6 +50,8 @@ public class GridWorldExperiment {
 
         analysis.gui.initGUI();
         problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
+
+        System.out.println(analysis.optimalReward);
     }
 
     private static void qLearningExperiment(GridWorldProblem problem) {
