@@ -1,14 +1,18 @@
 package edu.gatech.churchill.cs7641.gridworld;
 
+import burlap.behavior.policy.EpsilonGreedy;
 import burlap.behavior.policy.Policy;
 import burlap.behavior.policy.PolicyUtils;
 import burlap.behavior.singleagent.auxiliary.EpisodeSequenceVisualizer;
+import burlap.behavior.singleagent.auxiliary.StateReachability;
 import burlap.behavior.singleagent.learning.LearningAgent;
 import burlap.behavior.singleagent.learning.LearningAgentFactory;
 import burlap.behavior.singleagent.learning.tdmethods.QLearning;
+import burlap.behavior.singleagent.planning.Planner;
 import burlap.behavior.singleagent.planning.stochastic.DynamicProgramming;
 import burlap.behavior.singleagent.planning.stochastic.policyiteration.PolicyIteration;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
+import burlap.behavior.valuefunction.ValueFunction;
 import burlap.domain.singleagent.gridworld.GridWorldDomain;
 import burlap.domain.singleagent.gridworld.GridWorldRewardFunction;
 import burlap.domain.singleagent.gridworld.GridWorldTerminalFunction;
@@ -17,10 +21,12 @@ import burlap.domain.singleagent.gridworld.state.GridAgent;
 import burlap.domain.singleagent.gridworld.state.GridLocation;
 import burlap.domain.singleagent.gridworld.state.GridWorldState;
 import burlap.mdp.auxiliary.common.ConstantStateGenerator;
+import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.environment.SimulatedEnvironment;
 import burlap.mdp.singleagent.oo.OOSADomain;
 import burlap.statehashing.simple.SimpleHashableStateFactory;
 import burlap.visualizer.Visualizer;
+import edu.gatech.churchill.cs7641.DecayingEpsilonGreedy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +57,7 @@ public class GridWorldProblem {
         setupWalls(width, height);
         var locations = setupHazards(width, height, rewardFunction);
         locations.add(new GridLocation(width - 1, height - 1, GOAL_LOCATION_TYPE, "goal"));
+        rewardFunction.setReward(width - 1, height - 1, 100);
 
         gridWorld.setTf(terminalFunction);
         gridWorld.setRf(rewardFunction);
@@ -125,7 +132,7 @@ public class GridWorldProblem {
         ValueIteration planner = new ValueIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxIterations);
         Policy policy = planner.planFromState(initialState);
 
-        return createAnalysis(planner, policy);
+        return createAnalysis(planner, policy, planner.getAllStates());
     }
 
     public GridWorldAnalysis createPolicyIterationAnalysis() {
@@ -137,17 +144,38 @@ public class GridWorldProblem {
         PolicyIteration planner = new PolicyIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxEvaluationIterations, maxPolicyIterations);
         Policy policy = planner.planFromState(initialState);
 
-        return createAnalysis(planner, policy);
+        return createAnalysis(planner, policy, planner.getAllStates());
     }
 
-    private GridWorldAnalysis createAnalysis(DynamicProgramming planner, Policy policy) {
+    public GridWorldAnalysis createQLearningAnalysis() {
+        double gamma = 0.99;
+        double qInit = 1.0;
+        double learningRate = 0.1;
+        DecayingEpsilonGreedy learningPolicy = new DecayingEpsilonGreedy(1.0, 0.95);
+        int maxNumberOfEpisodes = Integer.MAX_VALUE;
+
+        QLearning agent = new QLearning(singleAgentDomain, gamma, hashingFactory, qInit, learningRate, learningPolicy, maxNumberOfEpisodes);
+        learningPolicy.setSolver(agent);
+        Policy policy = null;
+
+        for(int trial = 0; trial < 200; trial++) {
+            policy = agent.planFromState(initialState);
+            learningPolicy.resetEpsilon();
+        }
+
+        List<State> allStates = StateReachability.getReachableStates(initialState, singleAgentDomain, hashingFactory);
+
+        return createAnalysis(agent, policy, allStates);
+    }
+
+    private GridWorldAnalysis createAnalysis(ValueFunction planner, Policy policy, List<State> allStates) {
         GridWorldAnalysis analysis = new GridWorldAnalysis();
+        analysis.planner = planner;
         analysis.policy = policy;
         analysis.episode = PolicyUtils.rollout(policy, simulatedEnvironment);
 
         analysis.gui = GridWorldDomain.getGridWorldValueFunctionVisualization(
-                planner.getAllStates(),
-                gridWorld.getWidth(), gridWorld.getHeight(),
+                allStates, gridWorld.getWidth(), gridWorld.getHeight(),
                 planner, policy);
 
         return analysis;

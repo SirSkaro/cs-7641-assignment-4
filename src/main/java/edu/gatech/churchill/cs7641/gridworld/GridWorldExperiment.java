@@ -44,8 +44,6 @@ public class GridWorldExperiment {
 
         analysis.gui.initGUI();
         problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
-
-        System.out.println(analysis.optimalReward);
     }
 
     private static void policyIterationExperiment(GridWorldProblem problem) {
@@ -54,17 +52,21 @@ public class GridWorldExperiment {
 
         analysis.gui.initGUI();
         problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
-
-        System.out.println(analysis.optimalReward);
     }
 
     private static void qLearningExperiment(GridWorldProblem problem) {
-        LearningAgentFactory[] agentFactories = new LearningAgentFactory[]{
-                problem.createQLearningAgentFactory()
-        };
+//        LearningAgentFactory[] agentFactories = new LearningAgentFactory[]{
+//                problem.createQLearningAgentFactory()
+//        };
+//
+//        var experiment = constructExperiment(problem, agentFactories);
+//        experiment.startExperiment();
+        GridWorldAnalysis analysis = problem.createQLearningAnalysis();
+        analysis.episode.write(String.format("%s/ql_%dx%d", OUTPUT_DIRECTORY_PATH, width, height));
 
-        var experiment = constructExperiment(problem, agentFactories);
-        experiment.startExperiment();
+        analysis.gui.initGUI();
+        problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
+
     }
 
     private static LearningAlgorithmExperimenter constructExperiment(GridWorldProblem problem, LearningAgentFactory[] agentFactories) {
