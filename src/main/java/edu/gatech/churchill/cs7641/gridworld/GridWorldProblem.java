@@ -75,13 +75,13 @@ public class GridWorldProblem {
             int westWallSegmentToOpen = random.nextInt(width/2);
             gridWorld.clearLocationOfWalls(westWallSegmentToOpen, height/2);
 
-            int eastWallSegmentToOpen = random.nextInt(width/2, width);
+            int eastWallSegmentToOpen = random.nextInt(width/2 + 1, width);
             gridWorld.clearLocationOfWalls(eastWallSegmentToOpen, height/2);
 
             int southWallSegmentToOpen = random.nextInt(height/2);
             gridWorld.clearLocationOfWalls(width/2, southWallSegmentToOpen);
 
-            int northWallSegmentToOpen = random.nextInt(height/2, height);
+            int northWallSegmentToOpen = random.nextInt(height/2 + 1, height);
             gridWorld.clearLocationOfWalls(width/2, northWallSegmentToOpen);
         }
     }
