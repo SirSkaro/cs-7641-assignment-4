@@ -151,16 +151,16 @@ public class GridWorldProblem {
         double gamma = 0.99;
         double qInit = 1.0;
         double learningRate = 0.1;
-        DecayingEpsilonGreedy learningPolicy = new DecayingEpsilonGreedy(1.0, 0.95);
+        DecayingEpsilonGreedy explorationPolicy = new DecayingEpsilonGreedy(1.0, 0.999);
         int maxNumberOfEpisodes = Integer.MAX_VALUE;
 
-        QLearning agent = new QLearning(singleAgentDomain, gamma, hashingFactory, qInit, learningRate, learningPolicy, maxNumberOfEpisodes);
-        learningPolicy.setSolver(agent);
+        QLearning agent = new QLearning(singleAgentDomain, gamma, hashingFactory, qInit, learningRate, explorationPolicy, maxNumberOfEpisodes);
+        explorationPolicy.setSolver(agent);
         Policy policy = null;
 
-        for(int trial = 0; trial < 200; trial++) {
+        for(int trial = 0; trial < 500; trial++) {
             policy = agent.planFromState(initialState);
-            learningPolicy.resetEpsilon();
+            explorationPolicy.resetEpsilon();
         }
 
         List<State> allStates = StateReachability.getReachableStates(initialState, singleAgentDomain, hashingFactory);
