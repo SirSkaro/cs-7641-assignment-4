@@ -157,13 +157,13 @@ public class GridWorldProblem {
         QLearning agent = new QLearning(singleAgentDomain, gamma, hashingFactory, qInit, learningRate, explorationPolicy, maxNumberOfEpisodes);
         explorationPolicy.setSolver(agent);
         Policy policy = null;
+        List<State> allStates = StateReachability.getReachableStates(initialState, singleAgentDomain, hashingFactory);
+        int trialsToAttempt = allStates.size() * 5;
 
-        for(int trial = 0; trial < 500; trial++) {
+        for(int trial = 0; trial < trialsToAttempt; trial++) {
             policy = agent.planFromState(initialState);
             explorationPolicy.resetEpsilon();
         }
-
-        List<State> allStates = StateReachability.getReachableStates(initialState, singleAgentDomain, hashingFactory);
 
         return createAnalysis(agent, policy, allStates);
     }
