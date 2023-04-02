@@ -29,9 +29,9 @@ import java.util.Random;
 public class GridWorldProblem {
 
     private static final float NON_GOAL_REWARD = -0.1f;
-    private static final float THIN_ICE_REWARD = -1f;
+    private static final float HAZARD_REWARD = -1f;
     private static final int GOAL_LOCATION_TYPE = 0;
-    private static final int THIN_ICE_LOCATION_TYPE = 1;
+    private static final int HAZARD_LOCATION_TYPE = 1;
 
     private OOSADomain singleAgentDomain;
     private GridWorldDomain gridWorld;
@@ -100,8 +100,8 @@ public class GridWorldProblem {
                 i--;
                 continue;
             }
-            rewardFunction.setReward(xPos, yPos, THIN_ICE_REWARD);
-            locations.add(new GridLocation(xPos, yPos, THIN_ICE_LOCATION_TYPE, String.format("thin ice %d", i+1)));
+            rewardFunction.setReward(xPos, yPos, HAZARD_REWARD);
+            locations.add(new GridLocation(xPos, yPos, HAZARD_LOCATION_TYPE, String.format("thin ice %d", i+1)));
         }
 
         return locations;

@@ -13,13 +13,13 @@ public class GridWorldExperiment {
     private static final String POLICY_ITERATION = "PI";
     private static final String Q_LEARNING = "QL";
     private static final String OUTPUT_DIRECTORY_PATH = "gridworld";
+    private static int width, height;
 
     public static void main(String[] args) {
         if(args.length != 3) {
             printUsageMessage();
         }
         String algorithm = args[0];
-        int width = 0, height = 0;
         try {
             width = Integer.parseInt(args[1]);
             height = Integer.parseInt(args[2]);
@@ -40,7 +40,7 @@ public class GridWorldExperiment {
 
     private static void valueIterationExperiment(GridWorldProblem problem) {
         GridWorldAnalysis analysis = problem.createValueIterationAnalysis();
-        analysis.episode.write(OUTPUT_DIRECTORY_PATH + "/vi");
+        analysis.episode.write(String.format("%s/vi_%dx%d",OUTPUT_DIRECTORY_PATH, width, height));
 
         analysis.gui.initGUI();
         problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
@@ -50,7 +50,7 @@ public class GridWorldExperiment {
 
     private static void policyIterationExperiment(GridWorldProblem problem) {
         GridWorldAnalysis analysis = problem.createPolicyIterationAnalysis();
-        analysis.episode.write(OUTPUT_DIRECTORY_PATH + "/pi");
+        analysis.episode.write(String.format("%s/pi_%dx%d",OUTPUT_DIRECTORY_PATH, width, height));
 
         analysis.gui.initGUI();
         problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
