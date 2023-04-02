@@ -96,7 +96,8 @@ public class GridWorldProblem {
             int xPos = random.nextInt(width);
             int yPos = random.nextInt(height);
 
-            if(map[xPos][yPos] == 1) { //if this is a wall, generate again
+            //if this is a wall or the goal, generate again
+            if(map[xPos][yPos] == 1 || (xPos == width-1 && yPos == height-1)) {
                 i--;
                 continue;
             }
