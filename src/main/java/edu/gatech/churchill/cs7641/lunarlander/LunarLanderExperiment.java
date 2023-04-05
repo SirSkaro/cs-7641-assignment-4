@@ -18,10 +18,7 @@ public class LunarLanderExperiment {
     private static final String OUTPUT_DIRECTORY_PATH = "lunarlander";
 
     public static void main(String[] args) {
-        testWorld();
-
-
-
+        //testWorld();
         if(args.length != 1) {
             printUsageMessage();
         }
@@ -37,6 +34,12 @@ public class LunarLanderExperiment {
     }
 
     private static void testWorld() {
+        LLState initialState = new LLState(
+                new LLAgent(8, 16, 0),
+                new LLBlock.LLPad(9, 14, 0, 4, "goal")
+                //new LLBlock.LLObstacle(60, 70, 0, 13, "obstacle")
+        );
+
         LunarLanderDomain world = new LunarLanderDomain();
         world.setXmin(0);
         world.setYmin(0);
@@ -47,12 +50,8 @@ public class LunarLanderExperiment {
         world.setAnginc(Math.PI/4);
         world.addThrustActionWithThrust(0.19);
         world.setTf(new LandedTerminalFunction(world));
-        world.setRf(new LunarLanderRF(world)); //TODO Make a reward function
-        LLState initialState = new LLState(
-                new LLAgent(8, 16, 0),
-                new LLBlock.LLPad(9, 14, 0, 4, "goal")
-                //new LLBlock.LLObstacle(60, 70, 0, 13, "obstacle")
-        );
+        world.setRf(new GoalProximityRewardFunction(world, initialState.pad));
+
 
         Visualizer vis = LLVisualizer.getVisualizer(world);
         VisualExplorer exp = new VisualExplorer(world.generateDomain(), vis, initialState);
@@ -70,8 +69,7 @@ public class LunarLanderExperiment {
         LunarLanderAnalysis analysis = problem.createValueIterationAnalysis();
         analysis.episode.write(String.format("%s/vi",OUTPUT_DIRECTORY_PATH));
 
-        analysis.gui.setVisible(true);
-        //problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
+        analysis.gui.initGUI();
     }
 
     private static void qLearningExperiment(LunarLanderProblem problem) {

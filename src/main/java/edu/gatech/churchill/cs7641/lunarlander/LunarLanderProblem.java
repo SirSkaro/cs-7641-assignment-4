@@ -27,6 +27,8 @@ public class LunarLanderProblem {
 
     public LunarLanderProblem() {
         hashingFactory = new SimpleHashableStateFactory();
+
+        initialState = new LLState(new LLAgent(8, 16, 0), new LLBlock.LLPad(2, 4, 0, 4, "goal"));
         world = new LunarLanderDomain();
         world.setXmin(0);
         world.setYmin(0);
@@ -37,10 +39,7 @@ public class LunarLanderProblem {
         world.setAnginc(Math.PI/4);
         world.addThrustActionWithThrust(0.19);
         world.setTf(new LandedTerminalFunction(world));
-        initialState = new LLState(
-                new LLAgent(8, 16, 0),
-                new LLBlock.LLPad(2, 4, 0, 4, "goal")
-        );
+        world.setRf(new GoalProximityRewardFunction(world, initialState.pad));
 
         singleAgentDomain = world.generateDomain(); //Terminal and reward functions are automatically set
 
