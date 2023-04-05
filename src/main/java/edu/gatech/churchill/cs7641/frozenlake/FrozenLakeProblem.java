@@ -1,6 +1,5 @@
-package edu.gatech.churchill.cs7641.gridworld;
+package edu.gatech.churchill.cs7641.frozenlake;
 
-import burlap.behavior.policy.EpsilonGreedy;
 import burlap.behavior.policy.Policy;
 import burlap.behavior.policy.PolicyUtils;
 import burlap.behavior.singleagent.auxiliary.EpisodeSequenceVisualizer;
@@ -8,8 +7,6 @@ import burlap.behavior.singleagent.auxiliary.StateReachability;
 import burlap.behavior.singleagent.learning.LearningAgent;
 import burlap.behavior.singleagent.learning.LearningAgentFactory;
 import burlap.behavior.singleagent.learning.tdmethods.QLearning;
-import burlap.behavior.singleagent.planning.Planner;
-import burlap.behavior.singleagent.planning.stochastic.DynamicProgramming;
 import burlap.behavior.singleagent.planning.stochastic.policyiteration.PolicyIteration;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
 import burlap.behavior.valuefunction.ValueFunction;
@@ -32,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class GridWorldProblem {
+public class FrozenLakeProblem {
 
     private static final float NON_GOAL_REWARD = -0.1f;
     private static final float HAZARD_REWARD = -1f;
@@ -45,7 +42,7 @@ public class GridWorldProblem {
     private SimpleHashableStateFactory hashingFactory;
     private SimulatedEnvironment simulatedEnvironment;
 
-    public GridWorldProblem(int width, int height, float probabilityOfSuccessfulTransition) {
+    public FrozenLakeProblem(int width, int height, float probabilityOfSuccessfulTransition) {
         gridWorld = new GridWorldDomain(width, height);
         gridWorld.setProbSucceedTransitionDynamics(probabilityOfSuccessfulTransition);
         gridWorld.setNumberOfLocationTypes(2);
@@ -124,7 +121,7 @@ public class GridWorldProblem {
         return simulatedEnvironment;
     }
 
-    public GridWorldAnalysis createValueIterationAnalysis() {
+    public FrozenLakeAnalysis createValueIterationAnalysis() {
         double maxDelta = 0.001;
         int maxIterations = 100;
         double gamma = 0.99;
@@ -135,7 +132,7 @@ public class GridWorldProblem {
         return createAnalysis(planner, policy, planner.getAllStates());
     }
 
-    public GridWorldAnalysis createPolicyIterationAnalysis() {
+    public FrozenLakeAnalysis createPolicyIterationAnalysis() {
         double maxDelta = 0.001;
         int maxEvaluationIterations = 200;
         int maxPolicyIterations = 100;
@@ -147,7 +144,7 @@ public class GridWorldProblem {
         return createAnalysis(planner, policy, planner.getAllStates());
     }
 
-    public GridWorldAnalysis createQLearningAnalysis() {
+    public FrozenLakeAnalysis createQLearningAnalysis() {
         double gamma = 0.99;
         double qInit = 1.0;
         double learningRate = 0.1;
@@ -168,8 +165,8 @@ public class GridWorldProblem {
         return createAnalysis(agent, policy, allStates);
     }
 
-    private GridWorldAnalysis createAnalysis(ValueFunction planner, Policy policy, List<State> allStates) {
-        GridWorldAnalysis analysis = new GridWorldAnalysis();
+    private FrozenLakeAnalysis createAnalysis(ValueFunction planner, Policy policy, List<State> allStates) {
+        FrozenLakeAnalysis analysis = new FrozenLakeAnalysis();
         analysis.planner = planner;
         analysis.policy = policy;
         analysis.episode = PolicyUtils.rollout(policy, simulatedEnvironment);

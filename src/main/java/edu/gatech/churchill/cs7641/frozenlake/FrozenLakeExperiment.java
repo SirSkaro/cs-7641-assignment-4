@@ -1,4 +1,4 @@
-package edu.gatech.churchill.cs7641.gridworld;
+package edu.gatech.churchill.cs7641.frozenlake;
 
 import burlap.behavior.singleagent.auxiliary.performance.LearningAlgorithmExperimenter;
 import burlap.behavior.singleagent.auxiliary.performance.PerformanceMetric;
@@ -7,7 +7,7 @@ import burlap.behavior.singleagent.learning.LearningAgentFactory;
 import burlap.mdp.singleagent.environment.SimulatedEnvironment;
 
 
-public class GridWorldExperiment {
+public class FrozenLakeExperiment {
 
     private static final String VALUE_ITERATION = "VI";
     private static final String POLICY_ITERATION = "PI";
@@ -28,7 +28,7 @@ public class GridWorldExperiment {
         }
 
         float probabilityOfSuccessfulTransition = 0.8f;
-        GridWorldProblem problem = new GridWorldProblem(width, height, probabilityOfSuccessfulTransition);
+        FrozenLakeProblem problem = new FrozenLakeProblem(width, height, probabilityOfSuccessfulTransition);
 
         switch (algorithm) {
             case Q_LEARNING -> qLearningExperiment(problem);
@@ -38,30 +38,30 @@ public class GridWorldExperiment {
         }
     }
 
-    private static void valueIterationExperiment(GridWorldProblem problem) {
-        GridWorldAnalysis analysis = problem.createValueIterationAnalysis();
+    private static void valueIterationExperiment(FrozenLakeProblem problem) {
+        FrozenLakeAnalysis analysis = problem.createValueIterationAnalysis();
         analysis.episode.write(String.format("%s/vi_%dx%d",OUTPUT_DIRECTORY_PATH, width, height));
 
         analysis.gui.initGUI();
         problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
     }
 
-    private static void policyIterationExperiment(GridWorldProblem problem) {
-        GridWorldAnalysis analysis = problem.createPolicyIterationAnalysis();
+    private static void policyIterationExperiment(FrozenLakeProblem problem) {
+        FrozenLakeAnalysis analysis = problem.createPolicyIterationAnalysis();
         analysis.episode.write(String.format("%s/pi_%dx%d",OUTPUT_DIRECTORY_PATH, width, height));
 
         analysis.gui.initGUI();
         problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
     }
 
-    private static void qLearningExperiment(GridWorldProblem problem) {
+    private static void qLearningExperiment(FrozenLakeProblem problem) {
 //        LearningAgentFactory[] agentFactories = new LearningAgentFactory[]{
 //                problem.createQLearningAgentFactory()
 //        };
 //
 //        var experiment = constructExperiment(problem, agentFactories);
 //        experiment.startExperiment();
-        GridWorldAnalysis analysis = problem.createQLearningAnalysis();
+        FrozenLakeAnalysis analysis = problem.createQLearningAnalysis();
         analysis.episode.write(String.format("%s/ql_%dx%d", OUTPUT_DIRECTORY_PATH, width, height));
 
         analysis.gui.initGUI();
@@ -69,7 +69,7 @@ public class GridWorldExperiment {
 
     }
 
-    private static LearningAlgorithmExperimenter constructExperiment(GridWorldProblem problem, LearningAgentFactory[] agentFactories) {
+    private static LearningAlgorithmExperimenter constructExperiment(FrozenLakeProblem problem, LearningAgentFactory[] agentFactories) {
         SimulatedEnvironment environment = problem.getSimulatedEnvironment();
 
         LearningAlgorithmExperimenter experimenter = new LearningAlgorithmExperimenter(environment, 10, 100, agentFactories);
