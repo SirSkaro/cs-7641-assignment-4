@@ -35,20 +35,20 @@ public class LunarLanderExperiment {
 
     private static void testWorld() {
         LLState initialState = new LLState(
-                new LLAgent(8, 16, 0),
-                new LLBlock.LLPad(9, 14, 0, 4, "goal")
+                new LLAgent(4, 6, 0),
+                new LLBlock.LLPad(5, 6, 0, 3, "goal")
                 //new LLBlock.LLObstacle(60, 70, 0, 13, "obstacle")
         );
 
         LunarLanderDomain world = new LunarLanderDomain();
         world.setXmin(0);
         world.setYmin(0);
-        world.setYmax(16);
-        world.setXmax(16);
+        world.setYmax(8);
+        world.setXmax(8);
         world.setGravity(-0.2);
         world.setAngmax(Math.PI/4);
         world.setAnginc(Math.PI/4);
-        world.addThrustActionWithThrust(0.19);
+        world.addThrustActionWithThrust(0.15);
         world.setTf(new LandedTerminalFunction(world));
         world.setRf(new GoalProximityRewardFunction(world, initialState.pad));
 
@@ -56,7 +56,7 @@ public class LunarLanderExperiment {
         Visualizer vis = LLVisualizer.getVisualizer(world);
         VisualExplorer exp = new VisualExplorer(world.generateDomain(), vis, initialState);
 
-        exp.addKeyAction("w", LunarLanderDomain.ACTION_THRUST, "0.19");
+        exp.addKeyAction("w", LunarLanderDomain.ACTION_THRUST, "0.15");
         exp.addKeyAction("a", LunarLanderDomain.ACTION_TURN_LEFT, "");
         exp.addKeyAction("d", LunarLanderDomain.ACTION_TURN_RIGHT, "");
         exp.addKeyAction("x", LunarLanderDomain.ACTION_IDLE, "");

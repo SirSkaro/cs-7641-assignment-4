@@ -11,11 +11,14 @@ import burlap.domain.singleagent.lunarlander.state.LLAgent;
 import burlap.domain.singleagent.lunarlander.state.LLBlock;
 import burlap.domain.singleagent.lunarlander.state.LLState;
 import burlap.mdp.auxiliary.common.ConstantStateGenerator;
+import burlap.mdp.core.action.UniversalActionType;
 import burlap.mdp.singleagent.environment.SimulatedEnvironment;
 import burlap.mdp.singleagent.oo.OOSADomain;
 import burlap.shell.visual.VisualExplorer;
 import burlap.statehashing.simple.SimpleHashableStateFactory;
 import edu.gatech.churchill.cs7641.DecayingEpsilonGreedy;
+
+import java.util.List;
 
 public class LunarLanderProblem {
 
@@ -28,20 +31,22 @@ public class LunarLanderProblem {
     public LunarLanderProblem() {
         hashingFactory = new SimpleHashableStateFactory();
 
-        initialState = new LLState(new LLAgent(8, 16, 0), new LLBlock.LLPad(2, 4, 0, 4, "goal"));
+        initialState = new LLState(new LLAgent(4, 6, 0), new LLBlock.LLPad(5, 6, 0, 3, "goal"));
         world = new LunarLanderDomain();
         world.setXmin(0);
         world.setYmin(0);
-        world.setYmax(16);
-        world.setXmax(16);
+        world.setYmax(8);
+        world.setXmax(8);
         world.setGravity(-0.2);
         world.setAngmax(Math.PI/4);
         world.setAnginc(Math.PI/4);
-        world.addThrustActionWithThrust(0.19);
         world.setTf(new LandedTerminalFunction(world));
         world.setRf(new GoalProximityRewardFunction(world, initialState.pad));
 
-        singleAgentDomain = world.generateDomain(); //Terminal and reward functions are automatically set
+        singleAgentDomain = world.generateDomain();
+        singleAgentDomain.setActionTypes(new UniversalActionType(LunarLanderDomain.ACTION_TURN_LEFT))
+                .addActionType(new UniversalActionType(LunarLanderDomain.ACTION_TURN_RIGHT))
+                .addActionType(new LunarLanderDomain.ThrustType(List.of(0.15)));
 
         ConstantStateGenerator stateGenerator = new ConstantStateGenerator(initialState);
         simulatedEnvironment = new SimulatedEnvironment(singleAgentDomain, stateGenerator);
@@ -69,7 +74,7 @@ public class LunarLanderProblem {
         explorationPolicy.setSolver(agent);
         Policy policy = null;
 
-        for(int trial = 0; trial < 5; trial++) {
+        for(int trial = 0; trial < 5000; trial++) {
             policy = agent.planFromState(initialState);
             explorationPolicy.resetEpsilon();
         }
