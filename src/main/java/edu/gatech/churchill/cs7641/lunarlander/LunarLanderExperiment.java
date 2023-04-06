@@ -35,16 +35,17 @@ public class LunarLanderExperiment {
 
     private static void testWorld() {
         LLState initialState = new LLState(
-                new LLAgent(4, 6, 0),
-                new LLBlock.LLPad(5, 6, 0, 3, "goal")
-                //new LLBlock.LLObstacle(60, 70, 0, 13, "obstacle")
+                new LLAgent(4, 5, 0),
+                new LLBlock.LLPad(5, 6, 0, 2, "goal"),
+                new LLBlock.LLObstacle(3, 3, 0, 7, "left wall"),
+                new LLBlock.LLObstacle(7, 7, 0, 7, "right wall")
         );
 
         LunarLanderDomain world = new LunarLanderDomain();
-        world.setXmin(0);
+        world.setXmin(3);
         world.setYmin(0);
-        world.setYmax(8);
-        world.setXmax(8);
+        world.setYmax(7);
+        world.setXmax(7);
         world.setGravity(-0.2);
         world.setAngmax(Math.PI/4);
         world.setAnginc(Math.PI/4);

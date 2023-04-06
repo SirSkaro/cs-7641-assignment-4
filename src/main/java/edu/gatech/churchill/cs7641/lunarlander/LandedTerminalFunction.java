@@ -12,7 +12,9 @@ public class LandedTerminalFunction implements TerminalFunction {
     private List<PropositionalFunction> terminalFunctions;
 
     public LandedTerminalFunction(LunarLanderDomain world){
-        terminalFunctions = List.of(world.new TouchPadPF("touching goal"), world.new TouchGroundPF("Touching ground"));
+        terminalFunctions = List.of(world.new TouchPadPF("touching goal"),
+                world.new TouchGroundPF("touching ground"),
+                world.new TouchSurfacePF("touching obstacle"));
     }
 
     @Override

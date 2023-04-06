@@ -14,12 +14,14 @@ public class GoalProximityRewardFunction implements RewardFunction {
     private PropositionalFunction onGoal;
     private PropositionalFunction touchingGoal;
     private PropositionalFunction onGround;
+    private PropositionalFunction touchingWall;
     private LLBlock.LLPad goal;
 
     public GoalProximityRewardFunction(LunarLanderDomain world, LLBlock.LLPad goal) {
         onGoal = world.new OnPadPF("on goal");
         touchingGoal = world.new TouchPadPF("touching goal");
         onGround = world.new TouchGroundPF("touching ground");
+        touchingWall = world.new TouchSurfacePF("touching wall");
 
         this.goal = goal;
     }
@@ -32,7 +34,7 @@ public class GoalProximityRewardFunction implements RewardFunction {
             return 1000;
         } else if(touchingGoal.someGroundingIsTrue(castedSPrime)) {
             return 100;
-        } else if(onGround.someGroundingIsTrue(castedSPrime)) {
+        } else if(onGround.someGroundingIsTrue(castedSPrime) || touchingWall.someGroundingIsTrue(castedSPrime)) {
             return -1000;
         }  else {
             LLState llstate = (LLState) sPrime;
