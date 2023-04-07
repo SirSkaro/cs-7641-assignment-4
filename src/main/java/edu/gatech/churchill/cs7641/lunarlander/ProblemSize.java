@@ -45,9 +45,39 @@ public enum ProblemSize {
         }
     ),
     LARGE(
-        () -> {return null;},
-        (initialState) -> {return null;},
-        (domain) -> {return null;}
+        () -> {
+            return new LLState(
+                    new LLAgent(8, 11, 0),
+                    new LLBlock.LLPad(12, 14, 0, 6, "goal"),
+                    new LLBlock.LLObstacle(7, 7, 0, 12, "left wall"),
+                    new LLBlock.LLObstacle(16, 16, 0, 12, "right wall"),
+                    new LLBlock.LLObstacle(7, 16, 12, 12, "ceiling"),
+                    new LLBlock.LLObstacle(10, 13, 7, 8, "floating rock"),
+                    new LLBlock.LLObstacle(9, 10, 0, 4, "cliff")
+            );
+        },
+        (initialState) -> {
+            LunarLanderDomain world = new LunarLanderDomain();
+            world.setXmin(7);
+            world.setYmin(0);
+            world.setYmax(12);
+            world.setXmax(16);
+            world.setGravity(-0.2);
+            world.setAngmax(Math.PI/4);
+            world.setAnginc(Math.PI/4);
+            world.setTf(new LandedTerminalFunction(world));
+            world.setRf(new GoalProximityRewardFunction(world, initialState.pad));
+
+            return world;
+        },
+        (world) -> {
+            OOSADomain singleAgentDomain = world.generateDomain();
+            singleAgentDomain.setActionTypes(new UniversalActionType(LunarLanderDomain.ACTION_TURN_LEFT))
+                    .addActionType(new UniversalActionType(LunarLanderDomain.ACTION_TURN_RIGHT))
+                    .addActionType(new LunarLanderDomain.ThrustType(List.of(0.15)));
+
+            return singleAgentDomain;
+        }
     );
 
     public LLState initialState;

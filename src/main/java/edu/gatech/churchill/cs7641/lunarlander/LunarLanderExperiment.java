@@ -36,21 +36,25 @@ public class LunarLanderExperiment {
 
     private static void testWorld() {
         LLState initialState = new LLState(
-                new LLAgent(4, 5, 0),
-                new LLBlock.LLPad(5, 6, 0, 2, "goal"),
-                new LLBlock.LLObstacle(3, 3, 0, 7, "left wall"),
-                new LLBlock.LLObstacle(7, 7, 0, 7, "right wall")
+                new LLAgent(8, 11, 0),
+                new LLBlock.LLPad(12, 14, 0, 6, "goal"),
+                new LLBlock.LLObstacle(7, 7, 0, 12, "left wall"),
+                new LLBlock.LLObstacle(16, 16, 0, 12, "right wall"),
+                new LLBlock.LLObstacle(7, 16, 12, 12, "ceiling"),
+                new LLBlock.LLObstacle(10, 13, 7, 8, "floating rock"),
+                new LLBlock.LLObstacle(9, 10, 0, 4, "cliff")
         );
 
+        double thrust = 0.19;
         LunarLanderDomain world = new LunarLanderDomain();
-        world.setXmin(3);
+        world.setXmin(7);
         world.setYmin(0);
-        world.setYmax(7);
-        world.setXmax(7);
+        world.setYmax(12);
+        world.setXmax(16);
         world.setGravity(-0.2);
         world.setAngmax(Math.PI/4);
         world.setAnginc(Math.PI/4);
-        world.addThrustActionWithThrust(0.15);
+        world.addThrustActionWithThrust(thrust);
         world.setTf(new LandedTerminalFunction(world));
         world.setRf(new GoalProximityRewardFunction(world, initialState.pad));
 
@@ -58,7 +62,7 @@ public class LunarLanderExperiment {
         Visualizer vis = LLVisualizer.getVisualizer(world);
         VisualExplorer exp = new VisualExplorer(world.generateDomain(), vis, initialState);
 
-        exp.addKeyAction("w", LunarLanderDomain.ACTION_THRUST, "0.15");
+        exp.addKeyAction("w", LunarLanderDomain.ACTION_THRUST, String.valueOf(thrust));
         exp.addKeyAction("a", LunarLanderDomain.ACTION_TURN_LEFT, "");
         exp.addKeyAction("d", LunarLanderDomain.ACTION_TURN_RIGHT, "");
         exp.addKeyAction("x", LunarLanderDomain.ACTION_IDLE, "");

@@ -34,7 +34,7 @@ public class LunarLanderProblem {
     }
 
     public LunarLanderAnalysis createValueIterationAnalysis() {
-        double maxDelta = 0.001;
+        double maxDelta = .001;
         int maxIterations = 100;
         double gamma = 0.99;
 
@@ -45,9 +45,9 @@ public class LunarLanderProblem {
     }
 
     public LunarLanderAnalysis createQLearningAnalysis() {
-        double gamma = 0.99;
-        double qInit = 1.0;
-        double learningRate = 0.1;
+        double gamma = .99;
+        double qInit = 1;
+        double learningRate = .1;
         DecayingEpsilonGreedy explorationPolicy = new DecayingEpsilonGreedy(1.0, 0.999);
         int maxNumberOfEpisodes = Integer.MAX_VALUE;
 
@@ -55,7 +55,7 @@ public class LunarLanderProblem {
         explorationPolicy.setSolver(agent);
         Policy policy = null;
 
-        for(int trial = 0; trial < 5000; trial++) {
+        for(int trial = 0; trial < 20000; trial++) {
             policy = agent.planFromState(initialState);
             explorationPolicy.resetEpsilon();
         }
