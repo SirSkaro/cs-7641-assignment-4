@@ -19,11 +19,12 @@ public class LunarLanderExperiment {
 
     public static void main(String[] args) {
         //testWorld();
-        if(args.length != 1) {
+        if(args.length != 2) {
             printUsageMessage();
         }
         String algorithm = args[0];
-        LunarLanderProblem problem = new LunarLanderProblem();
+        ProblemSize problemSize = args[1].equalsIgnoreCase("small") ? ProblemSize.SMALL : ProblemSize.LARGE;
+        LunarLanderProblem problem = new LunarLanderProblem(problemSize);
 
         switch (algorithm) {
             case Q_LEARNING -> qLearningExperiment(problem);
@@ -81,11 +82,13 @@ public class LunarLanderExperiment {
     }
 
     private static void printUsageMessage() {
-        System.err.println("Usage: [algorithm]");
+        System.err.println("Usage: [algorithm] [size]");
         System.err.println("Supported algorithms:");
         System.err.println(String.format("\t'%s' - Value Iteration", VALUE_ITERATION));
         System.err.println(String.format("\t'%s' - Policy Iteration", POLICY_ITERATION));
         System.err.println(String.format("\t'%s' - Q-Learning", Q_LEARNING));
+        System.err.println("Supported sizes:");
+        System.err.println("\t small, large");
         System.exit(1);
     }
 

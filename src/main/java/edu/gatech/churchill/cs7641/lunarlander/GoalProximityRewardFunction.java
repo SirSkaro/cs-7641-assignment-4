@@ -43,7 +43,7 @@ public class GoalProximityRewardFunction implements RewardFunction {
             double xDelta = llstate.agent.x - centerGoalXCoordinate;
             double yDelta = llstate.agent.y - goalYCoordinate;
 
-            return 1 / (Math.sqrt(Math.pow(xDelta, 2) + Math.pow(yDelta, 2)));
+            return -(Math.sqrt(Math.pow(xDelta, 2) + Math.pow(yDelta, 2)));
         }
     }
 }
