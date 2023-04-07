@@ -24,6 +24,8 @@ import burlap.mdp.singleagent.oo.OOSADomain;
 import burlap.statehashing.simple.SimpleHashableStateFactory;
 import burlap.visualizer.Visualizer;
 import edu.gatech.churchill.cs7641.DecayingEpsilonGreedy;
+import edu.gatech.churchill.cs7641.GeneralAnalysis;
+import edu.gatech.churchill.cs7641.RecordingValueIteration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,10 +128,11 @@ public class FrozenLakeProblem {
         int maxIterations = 100;
         double gamma = 0.99;
 
-        ValueIteration planner = new ValueIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxIterations);
+        RecordingValueIteration planner = new RecordingValueIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxIterations);
         Policy policy = planner.planFromState(initialState);
+        GeneralAnalysis generalAnalysis = planner.getAnalysis();
 
-        return createAnalysis(planner, policy, planner.getAllStates());
+        return createAnalysis(planner, policy, planner.getAllStates(), generalAnalysis);
     }
 
     public FrozenLakeAnalysis createPolicyIterationAnalysis() {
@@ -141,7 +144,7 @@ public class FrozenLakeProblem {
         PolicyIteration planner = new PolicyIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxEvaluationIterations, maxPolicyIterations);
         Policy policy = planner.planFromState(initialState);
 
-        return createAnalysis(planner, policy, planner.getAllStates());
+        return createAnalysis(planner, policy, planner.getAllStates(), null);
     }
 
     public FrozenLakeAnalysis createQLearningAnalysis() {
@@ -162,14 +165,15 @@ public class FrozenLakeProblem {
             explorationPolicy.resetEpsilon();
         }
 
-        return createAnalysis(agent, policy, allStates);
+        return createAnalysis(agent, policy, allStates, null);
     }
 
-    private FrozenLakeAnalysis createAnalysis(ValueFunction planner, Policy policy, List<State> allStates) {
+    private FrozenLakeAnalysis createAnalysis(ValueFunction planner, Policy policy, List<State> allStates, GeneralAnalysis generalAnalysis) {
         FrozenLakeAnalysis analysis = new FrozenLakeAnalysis();
         analysis.planner = planner;
         analysis.policy = policy;
         analysis.episode = PolicyUtils.rollout(policy, simulatedEnvironment);
+        analysis.generalAnalysis = generalAnalysis;
 
         analysis.gui = GridWorldDomain.getGridWorldValueFunctionVisualization(
                 allStates, gridWorld.getWidth(), gridWorld.getHeight(),

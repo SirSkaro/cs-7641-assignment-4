@@ -6,6 +6,8 @@ import burlap.behavior.singleagent.auxiliary.performance.TrialMode;
 import burlap.behavior.singleagent.learning.LearningAgentFactory;
 import burlap.mdp.singleagent.environment.SimulatedEnvironment;
 
+import java.io.IOException;
+
 
 public class FrozenLakeExperiment {
 
@@ -15,7 +17,7 @@ public class FrozenLakeExperiment {
     private static final String OUTPUT_DIRECTORY_PATH = "gridworld";
     private static int width, height;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         if(args.length != 3) {
             printUsageMessage();
         }
@@ -38,12 +40,15 @@ public class FrozenLakeExperiment {
         }
     }
 
-    private static void valueIterationExperiment(FrozenLakeProblem problem) {
+    private static void valueIterationExperiment(FrozenLakeProblem problem) throws IOException {
         FrozenLakeAnalysis analysis = problem.createValueIterationAnalysis();
-        analysis.episode.write(String.format("%s/vi_%dx%d",OUTPUT_DIRECTORY_PATH, width, height));
+        String filename = String.format("%s/vi_%dx%d", OUTPUT_DIRECTORY_PATH, width, height);
+        analysis.episode.write(filename);
 
         analysis.gui.initGUI();
         problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
+        analysis.generalAnalysis.writeToFile(filename);
+        System.out.println(analysis.generalAnalysis.iterationsToConverge());
     }
 
     private static void policyIterationExperiment(FrozenLakeProblem problem) {
@@ -55,12 +60,6 @@ public class FrozenLakeExperiment {
     }
 
     private static void qLearningExperiment(FrozenLakeProblem problem) {
-//        LearningAgentFactory[] agentFactories = new LearningAgentFactory[]{
-//                problem.createQLearningAgentFactory()
-//        };
-//
-//        var experiment = constructExperiment(problem, agentFactories);
-//        experiment.startExperiment();
         FrozenLakeAnalysis analysis = problem.createQLearningAnalysis();
         analysis.episode.write(String.format("%s/ql_%dx%d", OUTPUT_DIRECTORY_PATH, width, height));
 
