@@ -2,11 +2,9 @@ package edu.gatech.churchill.cs7641.lunarlander;
 
 import burlap.domain.singleagent.lunarlander.LLVisualizer;
 import burlap.domain.singleagent.lunarlander.LunarLanderDomain;
-import burlap.domain.singleagent.lunarlander.LunarLanderRF;
 import burlap.domain.singleagent.lunarlander.state.LLAgent;
 import burlap.domain.singleagent.lunarlander.state.LLBlock;
 import burlap.domain.singleagent.lunarlander.state.LLState;
-import burlap.mdp.singleagent.SADomain;
 import burlap.shell.visual.VisualExplorer;
 import burlap.visualizer.Visualizer;
 
@@ -29,7 +27,7 @@ public class LunarLanderExperiment {
         switch (algorithm) {
             case Q_LEARNING -> qLearningExperiment(problem);
             case VALUE_ITERATION -> valueIterationExperiment(problem);
-//            case POLICY_ITERATION -> policyIterationExperiment(problem);
+            case POLICY_ITERATION -> policyIterationExperiment(problem);
             default -> printUsageMessage();
         }
     }
@@ -74,6 +72,13 @@ public class LunarLanderExperiment {
     private static void valueIterationExperiment(LunarLanderProblem problem) {
         LunarLanderAnalysis analysis = problem.createValueIterationAnalysis();
         analysis.episode.write(String.format("%s/vi",OUTPUT_DIRECTORY_PATH));
+
+        analysis.gui.initGUI();
+    }
+
+    private static void policyIterationExperiment(LunarLanderProblem problem) {
+        LunarLanderAnalysis analysis = problem.createPolicyIterationAnalysis();
+        analysis.episode.write(String.format("%s/pi",OUTPUT_DIRECTORY_PATH));
 
         analysis.gui.initGUI();
     }
