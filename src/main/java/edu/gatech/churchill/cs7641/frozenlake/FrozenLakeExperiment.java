@@ -51,12 +51,15 @@ public class FrozenLakeExperiment {
         System.out.println(analysis.generalAnalysis.iterationsToConverge());
     }
 
-    private static void policyIterationExperiment(FrozenLakeProblem problem) {
+    private static void policyIterationExperiment(FrozenLakeProblem problem) throws IOException {
         FrozenLakeAnalysis analysis = problem.createPolicyIterationAnalysis();
-        analysis.episode.write(String.format("%s/pi_%dx%d",OUTPUT_DIRECTORY_PATH, width, height));
+        String filename = String.format("%s/pi_%dx%d",OUTPUT_DIRECTORY_PATH, width, height);
+        analysis.episode.write(filename);
 
         analysis.gui.initGUI();
         problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
+        analysis.generalAnalysis.writeToFile(filename);
+        System.out.println(analysis.generalAnalysis.iterationsToConverge());
     }
 
     private static void qLearningExperiment(FrozenLakeProblem problem) {

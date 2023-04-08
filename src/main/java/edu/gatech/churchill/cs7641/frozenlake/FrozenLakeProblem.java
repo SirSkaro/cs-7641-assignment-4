@@ -25,6 +25,7 @@ import burlap.statehashing.simple.SimpleHashableStateFactory;
 import burlap.visualizer.Visualizer;
 import edu.gatech.churchill.cs7641.DecayingEpsilonGreedy;
 import edu.gatech.churchill.cs7641.GeneralAnalysis;
+import edu.gatech.churchill.cs7641.RecordingPolicyIteration;
 import edu.gatech.churchill.cs7641.RecordingValueIteration;
 
 import java.util.ArrayList;
@@ -141,10 +142,10 @@ public class FrozenLakeProblem {
         int maxPolicyIterations = 100;
         double gamma = 0.99;
 
-        PolicyIteration planner = new PolicyIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxEvaluationIterations, maxPolicyIterations);
+        RecordingPolicyIteration planner = new RecordingPolicyIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxEvaluationIterations, maxPolicyIterations);
         Policy policy = planner.planFromState(initialState);
 
-        return createAnalysis(planner, policy, planner.getAllStates(), null);
+        return createAnalysis(planner, policy, planner.getAllStates(), planner.getAnalysis());
     }
 
     public FrozenLakeAnalysis createQLearningAnalysis() {
