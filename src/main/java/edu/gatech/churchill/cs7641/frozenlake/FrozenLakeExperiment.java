@@ -7,6 +7,7 @@ import burlap.behavior.singleagent.learning.LearningAgentFactory;
 import burlap.mdp.singleagent.environment.SimulatedEnvironment;
 
 import java.io.IOException;
+import java.util.function.Supplier;
 
 
 public class FrozenLakeExperiment {
@@ -33,42 +34,30 @@ public class FrozenLakeExperiment {
         FrozenLakeProblem problem = new FrozenLakeProblem(width, height, probabilityOfSuccessfulTransition);
 
         switch (algorithm) {
-            case Q_LEARNING -> qLearningExperiment(problem);
-            case VALUE_ITERATION -> valueIterationExperiment(problem);
-            case POLICY_ITERATION -> policyIterationExperiment(problem);
+            case Q_LEARNING -> {
+                String filename = String.format("%s/ql_%dx%d", OUTPUT_DIRECTORY_PATH, width, height);
+                runExperiment(problem, problem::createQLearningAnalysis, filename);
+            }
+            case VALUE_ITERATION -> {
+                String filename = String.format("%s/vi_%dx%d", OUTPUT_DIRECTORY_PATH, width, height);
+                runExperiment(problem, problem::createValueIterationAnalysis, filename);
+            }
+            case POLICY_ITERATION -> {
+                String filename = String.format("%s/pi_%dx%d", OUTPUT_DIRECTORY_PATH, width, height);
+                runExperiment(problem, problem::createPolicyIterationAnalysis, filename);
+            }
             default -> printUsageMessage();
         }
     }
 
-    private static void valueIterationExperiment(FrozenLakeProblem problem) throws IOException {
-        FrozenLakeAnalysis analysis = problem.createValueIterationAnalysis();
-        String filename = String.format("%s/vi_%dx%d", OUTPUT_DIRECTORY_PATH, width, height);
+    private static void runExperiment(FrozenLakeProblem problem, Supplier<FrozenLakeAnalysis> analysisSupplier, String filename) throws IOException {
+        FrozenLakeAnalysis analysis = analysisSupplier.get();
         analysis.episode.write(filename);
 
         analysis.gui.initGUI();
         problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
         analysis.generalAnalysis.writeToFile(filename);
-        System.out.println(analysis.generalAnalysis.iterationsToConverge());
-    }
-
-    private static void policyIterationExperiment(FrozenLakeProblem problem) throws IOException {
-        FrozenLakeAnalysis analysis = problem.createPolicyIterationAnalysis();
-        String filename = String.format("%s/pi_%dx%d",OUTPUT_DIRECTORY_PATH, width, height);
-        analysis.episode.write(filename);
-
-        analysis.gui.initGUI();
-        problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
-        analysis.generalAnalysis.writeToFile(filename);
-        System.out.println(analysis.generalAnalysis.iterationsToConverge());
-    }
-
-    private static void qLearningExperiment(FrozenLakeProblem problem) {
-        FrozenLakeAnalysis analysis = problem.createQLearningAnalysis();
-        analysis.episode.write(String.format("%s/ql_%dx%d", OUTPUT_DIRECTORY_PATH, width, height));
-
-        analysis.gui.initGUI();
-        problem.createVisualizer(OUTPUT_DIRECTORY_PATH);
-
+        System.out.println("Iterations to converge: " + analysis.generalAnalysis.iterationsToConverge());
     }
 
     private static LearningAlgorithmExperimenter constructExperiment(FrozenLakeProblem problem, LearningAgentFactory[] agentFactories) {

@@ -23,10 +23,7 @@ import burlap.mdp.singleagent.environment.SimulatedEnvironment;
 import burlap.mdp.singleagent.oo.OOSADomain;
 import burlap.statehashing.simple.SimpleHashableStateFactory;
 import burlap.visualizer.Visualizer;
-import edu.gatech.churchill.cs7641.DecayingEpsilonGreedy;
-import edu.gatech.churchill.cs7641.GeneralAnalysis;
-import edu.gatech.churchill.cs7641.RecordingPolicyIteration;
-import edu.gatech.churchill.cs7641.RecordingValueIteration;
+import edu.gatech.churchill.cs7641.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,7 +152,7 @@ public class FrozenLakeProblem {
         DecayingEpsilonGreedy explorationPolicy = new DecayingEpsilonGreedy(1.0, 0.999);
         int maxNumberOfEpisodes = Integer.MAX_VALUE;
 
-        QLearning agent = new QLearning(singleAgentDomain, gamma, hashingFactory, qInit, learningRate, explorationPolicy, maxNumberOfEpisodes);
+        RecordingQLearning agent = new RecordingQLearning(singleAgentDomain, gamma, hashingFactory, qInit, learningRate, explorationPolicy, maxNumberOfEpisodes);
         explorationPolicy.setSolver(agent);
         Policy policy = null;
         List<State> allStates = StateReachability.getReachableStates(initialState, singleAgentDomain, hashingFactory);
@@ -166,7 +163,7 @@ public class FrozenLakeProblem {
             explorationPolicy.resetEpsilon();
         }
 
-        return createAnalysis(agent, policy, allStates, null);
+        return createAnalysis(agent, policy, allStates, agent.getAnalysis());
     }
 
     private FrozenLakeAnalysis createAnalysis(ValueFunction planner, Policy policy, List<State> allStates, GeneralAnalysis generalAnalysis) {
