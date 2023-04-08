@@ -33,15 +33,16 @@ public class RecordingValueIteration extends ValueIteration {
         } else {
 
             Set<HashableState> states = this.valueFunction.keySet();
-            analysis.rewardPerIteration.add(value(initialState));
-            analysis.rewardDeltaPerIteration.add(0.0);
+            analysis.initialStateRewardPerIteration.add(value(initialState));
+            analysis.initialStateRewardDeltaPerIteration.add(0.0);
+            analysis.maxRewardDeltaPerIteration.add(0.0);
             analysis.timeInMsPerIteration.add(0L);
 
             int i;
             for(i = 0; i < this.maxIterations; ++i) {
                 long startTime = System.currentTimeMillis();
                 double delta = 0.0;
-                double v;
+                double v = 0.0;
                 double maxQ;
 
                 for(Iterator<HashableState> var5 = states.iterator(); var5.hasNext(); delta = Math.max(Math.abs(maxQ - v), delta)) {
@@ -52,8 +53,9 @@ public class RecordingValueIteration extends ValueIteration {
                 long endTime = System.currentTimeMillis();
 
                 // record statistics
-                analysis.rewardPerIteration.add(value(initialState));
-                analysis.rewardDeltaPerIteration.add(analysis.rewardPerIteration.get(i+1) - analysis.rewardPerIteration.get(i));
+                analysis.initialStateRewardPerIteration.add(value(initialState));
+                analysis.initialStateRewardDeltaPerIteration.add(analysis.initialStateRewardPerIteration.get(i+1) - analysis.initialStateRewardPerIteration.get(i));
+                analysis.maxRewardDeltaPerIteration.add(delta);
                 analysis.timeInMsPerIteration.add(endTime - startTime);
 
                 if (delta < this.maxDelta) {

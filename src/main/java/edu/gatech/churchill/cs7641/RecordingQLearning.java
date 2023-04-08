@@ -27,8 +27,9 @@ public class RecordingQLearning extends QLearning {
             SimulatedEnvironment env = new SimulatedEnvironment(this.domain, initialState);
             int eCount = 0;
             if(totalIterations == 0) { // First time only
-                analysis.rewardPerIteration.add(value(initialState));
-                analysis.rewardDeltaPerIteration.add(0.0);
+                analysis.initialStateRewardPerIteration.add(value(initialState));
+                analysis.initialStateRewardDeltaPerIteration.add(0.0);
+                analysis.maxRewardDeltaPerIteration.add(0.0);
                 analysis.timeInMsPerIteration.add(0L);
             }
 
@@ -37,8 +38,9 @@ public class RecordingQLearning extends QLearning {
                 this.runLearningEpisode(env, this.maxEpisodeSize);
                 long endTime = System.currentTimeMillis();
 
-                analysis.rewardPerIteration.add(value(initialState));
-                analysis.rewardDeltaPerIteration.add(analysis.rewardPerIteration.get(totalIterations+1) - analysis.rewardPerIteration.get(totalIterations));
+                analysis.initialStateRewardPerIteration.add(value(initialState));
+                analysis.initialStateRewardDeltaPerIteration.add(analysis.initialStateRewardPerIteration.get(totalIterations+1) - analysis.initialStateRewardPerIteration.get(totalIterations));
+                analysis.maxRewardDeltaPerIteration.add(maxQChangeInLastEpisode);
                 analysis.timeInMsPerIteration.add(endTime - startTime);
 
                 ++eCount;

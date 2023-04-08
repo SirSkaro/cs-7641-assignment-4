@@ -180,17 +180,4 @@ public class FrozenLakeProblem {
         return analysis;
     }
 
-    public LearningAgentFactory createQLearningAgentFactory() {
-        return new LearningAgentFactory() {
-
-            public String getAgentName() {
-                return "Q-learning";
-            }
-
-            public LearningAgent generateAgent() {
-                return new QLearning(singleAgentDomain, 0.99, hashingFactory, 0.3, 0.1);
-            }
-        };
-    }
-
 }

@@ -19,8 +19,9 @@ public class RecordingPolicyIteration extends PolicyIteration {
     public GreedyQPolicy planFromState(State initialState) {
         int iterations = 0;
         if (this.performReachabilityFrom(initialState) || !this.hasRunPlanning) {
-            analysis.rewardPerIteration.add(value(initialState));
-            analysis.rewardDeltaPerIteration.add(0.0);
+            analysis.initialStateRewardPerIteration.add(value(initialState));
+            analysis.initialStateRewardDeltaPerIteration.add(0.0);
+            analysis.maxRewardDeltaPerIteration.add(0.0);
             analysis.timeInMsPerIteration.add(0L);
 
             while(true) {
@@ -29,8 +30,9 @@ public class RecordingPolicyIteration extends PolicyIteration {
                 this.evaluativePolicy = new GreedyQPolicy(this.getCopyOfValueFunction());
                 long endTime = System.currentTimeMillis();
 
-                analysis.rewardPerIteration.add(value(initialState));
-                analysis.rewardDeltaPerIteration.add(analysis.rewardPerIteration.get(iterations+1) - analysis.rewardPerIteration.get(iterations));
+                analysis.initialStateRewardPerIteration.add(value(initialState));
+                analysis.initialStateRewardDeltaPerIteration.add(analysis.initialStateRewardPerIteration.get(iterations+1) - analysis.initialStateRewardPerIteration.get(iterations));
+                analysis.maxRewardDeltaPerIteration.add(delta);
                 analysis.timeInMsPerIteration.add(endTime - startTime);
 
                 ++iterations;
