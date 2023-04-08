@@ -149,19 +149,17 @@ public class FrozenLakeProblem {
         double gamma = 0.99;
         double qInit = 1.0;
         double learningRate = 0.1;
+        double thresholdDelta = 0.035;
         DecayingEpsilonGreedy explorationPolicy = new DecayingEpsilonGreedy(1.0, 0.999);
-        int maxNumberOfEpisodes = Integer.MAX_VALUE;
-
-        RecordingQLearning agent = new RecordingQLearning(singleAgentDomain, gamma, hashingFactory, qInit, learningRate, explorationPolicy, maxNumberOfEpisodes);
-        explorationPolicy.setSolver(agent);
-        Policy policy = null;
         List<State> allStates = StateReachability.getReachableStates(initialState, singleAgentDomain, hashingFactory);
-        int trialsToAttempt = allStates.size() * 5;
+        int maxNumberOfEpisodes = allStates.size() * 10;
 
-        for(int trial = 0; trial < trialsToAttempt; trial++) {
-            policy = agent.planFromState(initialState);
-            explorationPolicy.resetEpsilon();
-        }
+        RecordingQLearning agent = new RecordingQLearning(singleAgentDomain, gamma, hashingFactory, qInit, learningRate, explorationPolicy, maxNumberOfEpisodes, thresholdDelta);
+        explorationPolicy.setSolver(agent);
+
+
+        Policy policy = agent.planFromState(initialState);
+        explorationPolicy.resetEpsilon();
 
         return createAnalysis(agent, policy, allStates, agent.getAnalysis());
     }

@@ -33,7 +33,7 @@ public class GeneralAnalysis {
         String initialStateRewardDeltas = initialStateRewardDeltaPerIteration.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
-        String maxRewardDeltas = initialStateRewardDeltaPerIteration.stream()
+        String maxRewardDeltas = maxRewardDeltaPerIteration.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
         String times = timeInMsPerIteration.stream()
