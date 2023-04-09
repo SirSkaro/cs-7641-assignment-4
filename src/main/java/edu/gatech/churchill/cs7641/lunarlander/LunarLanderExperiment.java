@@ -29,15 +29,15 @@ public class LunarLanderExperiment {
 
         switch (algorithm) {
             case Q_LEARNING -> {
-                String filename = String.format("%s/ql",OUTPUT_DIRECTORY_PATH);
+                String filename = String.format("%s/ql_%s", OUTPUT_DIRECTORY_PATH, problemSize.name());
                 runExperiment(problem::createQLearningAnalysis, filename);
             }
             case VALUE_ITERATION -> {
-                String filename = String.format("%s/vi",OUTPUT_DIRECTORY_PATH);
+                String filename = String.format("%s/vi_%s", OUTPUT_DIRECTORY_PATH, problemSize.name());
                 runExperiment(problem::createValueIterationAnalysis, filename);
             }
             case POLICY_ITERATION -> {
-                String filename = String.format("%s/pi",OUTPUT_DIRECTORY_PATH);
+                String filename = String.format("%s/pi_%s", OUTPUT_DIRECTORY_PATH, problemSize.name());
                 runExperiment(problem::createPolicyIterationAnalysis, filename);
             }
             default -> printUsageMessage();
@@ -87,6 +87,7 @@ public class LunarLanderExperiment {
         analysis.generalAnalysis.writeToFile(filename);
         System.out.println("Iterations to converge: " + analysis.generalAnalysis.iterationsToConverge());
         System.out.println("Reward sequence: " + analysis.episode.rewardSequence);
+        System.out.println("Action sequence: " + analysis.episode.actionSequence);
         //System.out.println("Initial state rewards:" + analysis.generalAnalysis.initialStateRewardPerIteration);
         //analysis.gui.initGUI();
     }
