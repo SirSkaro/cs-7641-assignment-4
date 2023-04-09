@@ -5,20 +5,6 @@ actionSequence:
 - *id001
 - &id002 !!burlap.mdp.core.action.SimpleAction {name: north}
 - *id001
-- *id001
-- !!burlap.mdp.core.action.SimpleAction {name: south}
-- *id001
-- *id001
-- *id001
-- *id002
-- *id001
-- *id002
-- *id001
-- *id001
-- *id002
-- *id002
-- *id001
-- *id001
 - *id002
 - *id001
 - *id001
@@ -26,6 +12,22 @@ actionSequence:
 - *id001
 - *id001
 - *id001
+- *id002
+- *id001
+- *id001
+- *id001
+- *id001
+- *id002
+- *id002
+- *id001
+- *id001
+- *id002
+- *id002
+- *id002
+- *id002
+- *id002
+- *id002
+- *id002
 - *id001
 - *id001
 - *id002
@@ -44,7 +46,8 @@ rewardSequence: [-0.10000000149011612, -0.10000000149011612, -0.1000000014901161
   -0.10000000149011612, -0.10000000149011612, -0.10000000149011612, -0.10000000149011612,
   -0.10000000149011612, -0.10000000149011612, -0.10000000149011612, -0.10000000149011612,
   -0.10000000149011612, -0.10000000149011612, -0.10000000149011612, -0.10000000149011612,
-  -1.0, -0.10000000149011612, -1.0, -0.10000000149011612, -0.10000000149011612]
+  -0.10000000149011612, -0.10000000149011612, -0.10000000149011612, -1.0, -1.0, -0.10000000149011612,
+  -0.10000000149011612]
 stateSequence:
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
   agent: {name: agent, x: 0, y: 0}
@@ -84,16 +87,22 @@ stateSequence:
   agent: {name: agent, x: 3, y: 0}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
+  agent: {name: agent, x: 2, y: 0}
+  locations: *id003
+- !!burlap.domain.singleagent.gridworld.state.GridWorldState
+  agent: {name: agent, x: 3, y: 0}
+  locations: *id003
+- !!burlap.domain.singleagent.gridworld.state.GridWorldState
   agent: {name: agent, x: 3, y: 1}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
-  agent: {name: agent, x: 3, y: 2}
+  agent: {name: agent, x: 2, y: 1}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
-  agent: {name: agent, x: 4, y: 2}
+  agent: {name: agent, x: 1, y: 1}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
-  agent: {name: agent, x: 4, y: 1}
+  agent: {name: agent, x: 2, y: 1}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
   agent: {name: agent, x: 3, y: 1}
@@ -108,10 +117,10 @@ stateSequence:
   agent: {name: agent, x: 4, y: 1}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
-  agent: {name: agent, x: 4, y: 0}
+  agent: {name: agent, x: 5, y: 1}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
-  agent: {name: agent, x: 4, y: 1}
+  agent: {name: agent, x: 5, y: 1}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
   agent: {name: agent, x: 5, y: 1}
@@ -132,22 +141,22 @@ stateSequence:
   agent: {name: agent, x: 8, y: 3}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
-  agent: {name: agent, x: 8, y: 4}
+  agent: {name: agent, x: 8, y: 2}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
-  agent: {name: agent, x: 7, y: 4}
+  agent: {name: agent, x: 8, y: 1}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
-  agent: {name: agent, x: 8, y: 4}
+  agent: {name: agent, x: 7, y: 1}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
-  agent: {name: agent, x: 7, y: 4}
+  agent: {name: agent, x: 8, y: 1}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
-  agent: {name: agent, x: 8, y: 4}
+  agent: {name: agent, x: 8, y: 2}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
-  agent: {name: agent, x: 9, y: 4}
+  agent: {name: agent, x: 8, y: 3}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
   agent: {name: agent, x: 8, y: 4}
@@ -165,10 +174,10 @@ stateSequence:
   agent: {name: agent, x: 10, y: 6}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
-  agent: {name: agent, x: 10, y: 7}
+  agent: {name: agent, x: 10, y: 6}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
-  agent: {name: agent, x: 10, y: 6}
+  agent: {name: agent, x: 10, y: 7}
   locations: *id003
 - !!burlap.domain.singleagent.gridworld.state.GridWorldState
   agent: {name: agent, x: 10, y: 7}
