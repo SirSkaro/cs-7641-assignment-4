@@ -23,7 +23,6 @@ public class RecordingQLearning extends QLearning {
 
     @Override
     public GreedyQPolicy planFromState(State initialState) {
-        double delta = Double.MAX_VALUE;
         while(!hasConverged()) {
             SimulatedEnvironment env = new SimulatedEnvironment(this.domain, initialState);
             if(totalIterations == 0) { // First time only
@@ -32,7 +31,6 @@ public class RecordingQLearning extends QLearning {
                 analysis.maxRewardDeltaPerIteration.add(0.0);
                 analysis.timeInMsPerIteration.add(0L);
             }
-
 
             long startTime = System.currentTimeMillis();
             this.runLearningEpisode(env, this.maxEpisodeSize);
@@ -44,7 +42,6 @@ public class RecordingQLearning extends QLearning {
             analysis.timeInMsPerIteration.add(endTime - startTime);
 
             totalIterations++;
-            delta = maxQChangeInLastEpisode;
         }
 
         if(totalIterations > maxEpisodeSize) {

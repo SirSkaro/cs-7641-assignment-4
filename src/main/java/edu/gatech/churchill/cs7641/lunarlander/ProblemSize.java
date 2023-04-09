@@ -1,18 +1,21 @@
 package edu.gatech.churchill.cs7641.lunarlander;
 
+import burlap.behavior.policy.GreedyDeterministicQPolicy;
+import burlap.behavior.policy.SolverDerivedPolicy;
 import burlap.domain.singleagent.lunarlander.LunarLanderDomain;
 import burlap.domain.singleagent.lunarlander.state.LLAgent;
 import burlap.domain.singleagent.lunarlander.state.LLBlock;
 import burlap.domain.singleagent.lunarlander.state.LLState;
 import burlap.mdp.core.action.UniversalActionType;
 import burlap.mdp.singleagent.oo.OOSADomain;
+import edu.gatech.churchill.cs7641.DecayingEpsilonGreedy;
 
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public enum ProblemSize {
-    SMALL(1.0, 105, 1.0, 5.0,
+    SMALL(1.0, 105, 1.0, 5.0, new GreedyDeterministicQPolicy(),
         () -> {
             return new LLState(
                     new LLAgent(4, 5, 0),
@@ -44,7 +47,7 @@ public enum ProblemSize {
             return singleAgentDomain;
         }
     ),
-    LARGE(1.0, 105, 1.0, 5.0,
+    LARGE(0.1, 200, 0.2, 5.0, new DecayingEpsilonGreedy(1.0, 0.999),
         () -> {
             return new LLState(
                     new LLAgent(8, 11, 0),
@@ -87,8 +90,9 @@ public enum ProblemSize {
     public final int qInit;
     public final double learningRate;
     public final double thresholdDelta;
+    public final SolverDerivedPolicy explorationPolicy;
 
-    ProblemSize(double gamma, int qInit, double learningRate, double thresholdDelta,
+    ProblemSize(double gamma, int qInit, double learningRate, double thresholdDelta, SolverDerivedPolicy explorationPolicy,
                 Supplier<LLState> initialStateSupplier,
                 Function<LLState, LunarLanderDomain> worldSupplier,
                 Function<LunarLanderDomain, OOSADomain> domainSupplier) {
@@ -96,6 +100,7 @@ public enum ProblemSize {
         this.qInit = qInit;
         this.learningRate = learningRate;
         this.thresholdDelta = thresholdDelta;
+        this.explorationPolicy = explorationPolicy;
         initialState = initialStateSupplier.get();
         world = worldSupplier.apply(initialState);
         singleAgentDomain = domainSupplier.apply(world);

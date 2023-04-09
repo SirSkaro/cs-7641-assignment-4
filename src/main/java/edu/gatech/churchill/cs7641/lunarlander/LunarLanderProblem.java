@@ -1,9 +1,6 @@
 package edu.gatech.churchill.cs7641.lunarlander;
 
-import burlap.behavior.policy.EpsilonGreedy;
-import burlap.behavior.policy.GreedyDeterministicQPolicy;
-import burlap.behavior.policy.Policy;
-import burlap.behavior.policy.PolicyUtils;
+import burlap.behavior.policy.*;
 import burlap.behavior.singleagent.learning.tdmethods.QLearning;
 import burlap.behavior.singleagent.planning.stochastic.policyiteration.PolicyIteration;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
@@ -67,13 +64,12 @@ public class LunarLanderProblem {
         double qInit = problemSize.qInit;
         double learningRate = problemSize.learningRate;
         double thresholdDelta = problemSize.thresholdDelta;
-        GreedyDeterministicQPolicy explorationPolicy = new GreedyDeterministicQPolicy();
-        int maxNumberOfEpisodes = 20_000;
+        SolverDerivedPolicy explorationPolicy = problemSize.explorationPolicy;
+        int maxNumberOfEpisodes = 500_000;
 
         RecordingQLearning agent = new RecordingQLearning(singleAgentDomain, gamma, hashingFactory, qInit, learningRate, explorationPolicy, maxNumberOfEpisodes, thresholdDelta);
         explorationPolicy.setSolver(agent);
         Policy policy = agent.planFromState(initialState);
-        //explorationPolicy.resetEpsilon();
 
         return createAnalysis(agent, policy, agent.getAnalysis());
     }
