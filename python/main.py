@@ -43,7 +43,7 @@ class Analysis:
 
 def parse_data(problem: Problem) -> Analysis:
     data = np.genfromtxt(problem.value, delimiter=',', dtype=float)
-    return Analysis(data[0], data[1], data[2], data[3])
+    return Analysis(data[0][1:], data[1][1:], data[2][1:], data[3][1:])
 
 
 def create_plot(problem: Problem):
@@ -64,11 +64,10 @@ def create_plot(problem: Problem):
     delta_plot.plot(iterations, analysis.delta_max, label='Max Delta', linestyle='dashed')
     delta_plot.legend(loc='best')
 
-    time_plot.set_title('Time to Converge')
+    time_plot.set_title(f'Time to Converge\nTotal time: {analysis.time.sum()} ms')
     time_plot.set_xlabel('Iteration')
     time_plot.set_ylabel('Time (in ms)')
     time_plot.plot(iterations, analysis.time)
-    time_plot.text(0, 0, f'Total time: {analysis.time.sum()} ms')
 
     plt.show()
 
