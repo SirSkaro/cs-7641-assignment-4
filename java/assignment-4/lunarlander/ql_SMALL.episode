@@ -1,0 +1,52 @@
+!!burlap.behavior.singleagent.Episode
+actionSequence:
+- &id002 !!burlap.mdp.core.action.SimpleAction {name: turnRight}
+- &id001 !!burlap.domain.singleagent.lunarlander.LunarLanderDomain$ThrustType$ThrustAction {
+  thrust: 0.15}
+- *id001
+- *id001
+- *id002
+- *id002
+- !!burlap.mdp.core.action.SimpleAction {name: turnLeft}
+rewardSequence: [-3.264965543462902, -3.021969162466054, -2.6466126352806456, -2.1377945608827384,
+  -1.4746642812281956, -0.6427391713992456, 1000.0]
+stateSequence:
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.0, vx: 0.0, vy: 0.0, x: 4.0, y: 5.0}
+  obstacles: &id003
+  - {bottom: 0.0, left: 3.0, name: left wall, right: 3.0, top: 7.0}
+  - {bottom: 0.0, left: 7.0, name: right wall, right: 7.0, top: 7.0}
+  pad: &id004 {bottom: 0.0, left: 5.0, name: goal, right: 6.0, top: 2.0}
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.7853981633974483, vx: 0.0, vy: -0.2, x: 4.0, y: 4.9}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.7853981633974483, vx: 0.10606601717798213, vy: -0.2939339828220179,
+    x: 4.053033008588991, y: 4.6530330085889915}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.7853981633974483, vx: 0.21213203435596426, vy: -0.3878679656440358,
+    x: 4.212132034355964, y: 4.312132034355965}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.7853981633974483, vx: 0.31819805153394637, vy: -0.48180194846605373,
+    x: 4.477297077300919, y: 3.8772970773009203}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.7853981633974483, vx: 0.31819805153394637, vy: -0.6818019484660538,
+    x: 4.795495128834865, y: 3.2954951288348666}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.7853981633974483, vx: 0.31819805153394637, vy: -0.8818019484660538,
+    x: 5.113693180368812, y: 2.5136931803688127}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.0, vx: 0.0, vy: 0.0, x: 5.431891231902759, y: 2.0}
+  obstacles: *id003
+  pad: *id004

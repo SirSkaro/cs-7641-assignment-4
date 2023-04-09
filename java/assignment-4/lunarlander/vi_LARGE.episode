@@ -1,0 +1,87 @@
+!!burlap.behavior.singleagent.Episode
+actionSequence:
+- &id001 !!burlap.domain.singleagent.lunarlander.LunarLanderDomain$ThrustType$ThrustAction {
+  thrust: 0.15}
+- &id002 !!burlap.mdp.core.action.SimpleAction {name: turnRight}
+- *id001
+- *id001
+- *id001
+- *id001
+- *id001
+- *id001
+- *id001
+- *id001
+- !!burlap.mdp.core.action.SimpleAction {name: turnLeft}
+- *id002
+rewardSequence: [-8.581994232111787, -8.460533375621184, -8.190707989871052, -7.783833840952575,
+  -7.239012638271554, -6.555563010679782, -5.732959351269601, -4.77079045596386, -3.6687316457728993,
+  -2.42652940874515, -1.0433605726766626, 1000.0]
+stateSequence:
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.0, vx: 0.0, vy: 0.0, x: 8.0, y: 11.0}
+  obstacles: &id003
+  - {bottom: 0.0, left: 7.0, name: left wall, right: 7.0, top: 12.0}
+  - {bottom: 0.0, left: 16.0, name: right wall, right: 16.0, top: 12.0}
+  - {bottom: 12.0, left: 7.0, name: ceiling, right: 16.0, top: 12.0}
+  - {bottom: 7.0, left: 10.0, name: floating rock, right: 13.0, top: 8.0}
+  - {bottom: 0.0, left: 9.0, name: cliff, right: 10.0, top: 4.0}
+  pad: &id004 {bottom: 0.0, left: 12.0, name: goal, right: 14.0, top: 4.0}
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.0, vx: 9.184850993605149E-18, vy: -0.05000000000000002, x: 8.0,
+    y: 10.975}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.7853981633974483, vx: 9.184850993605149E-18, vy: -0.25, x: 8.0,
+    y: 10.825}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.7853981633974483, vx: 0.10606601717798214, vy: -0.3439339828220179,
+    x: 8.053033008588992, y: 10.52803300858899}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.7853981633974483, vx: 0.21213203435596428, vy: -0.43786796564403585,
+    x: 8.212132034355966, y: 10.137132034355963}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.7853981633974483, vx: 0.3181980515339464, vy: -0.5318019484660538,
+    x: 8.477297077300921, y: 9.652297077300917}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.7853981633974483, vx: 0.42426406871192857, vy: -0.6257359312880717,
+    x: 8.848528137423859, y: 9.073528137423853}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.7853981633974483, vx: 0.5303300858899107, vy: -0.7196699141100896,
+    x: 9.325825214724778, y: 8.400825214724772}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.7853981633974483, vx: 0.6363961030678928, vy: -0.8136038969321076,
+    x: 9.909188309203682, y: 7.634188309203674}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.7853981633974483, vx: 0.742462120245875, vy: -0.9075378797541255,
+    x: 10.598617420860567, y: 6.773617420860558}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.7853981633974483, vx: 0.8485281374238571, vy: -1.0014718625761434,
+    x: 11.394112549695434, y: 5.819112549695424}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.0, vx: 0.8485281374238571, vy: -1.2014718625761434, x: 12.242640687119291,
+    y: 4.717640687119281}
+  obstacles: *id003
+  pad: *id004
+- !!burlap.domain.singleagent.lunarlander.state.LLState
+  agent: {angle: 0.0, vx: 0.0, vy: 0.0, x: 13.091168824543148, y: 4.0}
+  obstacles: *id003
+  pad: *id004
