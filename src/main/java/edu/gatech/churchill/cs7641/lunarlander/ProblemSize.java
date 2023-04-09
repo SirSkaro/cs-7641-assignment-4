@@ -12,7 +12,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public enum ProblemSize {
-    SMALL(
+    SMALL(1.0, 105, 1.0, 5.0,
         () -> {
             return new LLState(
                     new LLAgent(4, 5, 0),
@@ -44,7 +44,7 @@ public enum ProblemSize {
             return singleAgentDomain;
         }
     ),
-    LARGE(
+    LARGE(1.0, 105, 1.0, 5.0,
         () -> {
             return new LLState(
                     new LLAgent(8, 11, 0),
@@ -80,13 +80,22 @@ public enum ProblemSize {
         }
     );
 
-    public LLState initialState;
-    public LunarLanderDomain world;
-    public OOSADomain singleAgentDomain;
+    public final LLState initialState;
+    public final LunarLanderDomain world;
+    public final OOSADomain singleAgentDomain;
+    public final double gamma;
+    public final int qInit;
+    public final double learningRate;
+    public final double thresholdDelta;
 
-    ProblemSize(Supplier<LLState> initialStateSupplier,
+    ProblemSize(double gamma, int qInit, double learningRate, double thresholdDelta,
+                Supplier<LLState> initialStateSupplier,
                 Function<LLState, LunarLanderDomain> worldSupplier,
                 Function<LunarLanderDomain, OOSADomain> domainSupplier) {
+        this.gamma = gamma;
+        this.qInit = qInit;
+        this.learningRate = learningRate;
+        this.thresholdDelta = thresholdDelta;
         initialState = initialStateSupplier.get();
         world = worldSupplier.apply(initialState);
         singleAgentDomain = domainSupplier.apply(world);

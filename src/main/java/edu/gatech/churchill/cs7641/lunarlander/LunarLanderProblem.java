@@ -26,8 +26,10 @@ public class LunarLanderProblem {
     private SimpleHashableStateFactory hashingFactory;
     private LLState initialState;
     private SimulatedEnvironment simulatedEnvironment;
+    private ProblemSize problemSize;
 
     public LunarLanderProblem(ProblemSize problemSize) {
+        this.problemSize = problemSize;
         hashingFactory = new SimpleHashableStateFactory();
         initialState = problemSize.initialState;
         world = problemSize.world;
@@ -61,11 +63,11 @@ public class LunarLanderProblem {
     }
 
     public LunarLanderAnalysis createQLearningAnalysis() {
-        double gamma = 1.0;
-        double qInit = 105;
-        double learningRate = 1.0;
+        double gamma = problemSize.gamma;
+        double qInit = problemSize.qInit;
+        double learningRate = problemSize.learningRate;
+        double thresholdDelta = problemSize.thresholdDelta;
         GreedyDeterministicQPolicy explorationPolicy = new GreedyDeterministicQPolicy();
-        double thresholdDelta = 5.0;
         int maxNumberOfEpisodes = 20_000;
 
         RecordingQLearning agent = new RecordingQLearning(singleAgentDomain, gamma, hashingFactory, qInit, learningRate, explorationPolicy, maxNumberOfEpisodes, thresholdDelta);

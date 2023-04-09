@@ -89,7 +89,7 @@ public class LunarLanderExperiment {
         analysis.generalAnalysis.writeToFile(filename);
         System.out.println("Iterations to converge: " + analysis.generalAnalysis.iterationsToConverge());
         System.out.println("Reward sequence: " + analysis.episode.rewardSequence);
-        System.out.println("Initial state rewards:" + analysis.generalAnalysis.initialStateRewardPerIteration);
+        //System.out.println("Initial state rewards:" + analysis.generalAnalysis.initialStateRewardPerIteration);
         //analysis.gui.initGUI();
     }
 
