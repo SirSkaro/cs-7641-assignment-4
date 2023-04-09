@@ -33,9 +33,44 @@ class Problem(Enum):
     LUNAR_LANDER_QL_LARGE = LUNAR_LANDER + Q_LEARNING_PREFIX + LUNAR_LANDER_LARGE
 
 
-def parse_data(problem: Problem):
-    return np.genfromtxt(problem.value, delimiter=',', dtype=float)
+class Analysis:
+    def __init__(self, convergence, delta_init, delta_max, time):
+        self.convergence = convergence
+        self. delta_init = delta_init
+        self.delta_max = delta_max
+        self.time = time
 
+
+def parse_data(problem: Problem) -> Analysis:
+    data = np.genfromtxt(problem.value, delimiter=',', dtype=float)
+    return Analysis(data[0], data[1], data[2], data[3])
+
+
+def create_plot(problem: Problem):
+    analysis = parse_data(problem)
+    iterations = np.arange(analysis.time.size)
+
+    fig, (convergence_plot, delta_plot, time_plot) = plt.subplots(1, 3)
+
+    convergence_plot.set_title('Convergence')
+    convergence_plot.set_xlabel('Iteration')
+    convergence_plot.set_ylabel('Reward')
+    convergence_plot.plot(iterations, analysis.convergence)
+
+    delta_plot.set_title('Delta Convergence')
+    delta_plot.set_xlabel('Iteration')
+    delta_plot.set_ylabel('Reward Delta')
+    delta_plot.plot(iterations, analysis.delta_init, label='Initial State Delta', linestyle='dotted')
+    delta_plot.plot(iterations, analysis.delta_max, label='Max Delta', linestyle='dashed')
+    delta_plot.legend(loc='best')
+
+    time_plot.set_title('Time to Converge')
+    time_plot.set_xlabel('Iteration')
+    time_plot.set_ylabel('Time (in ms)')
+    time_plot.plot(iterations, analysis.time)
+    time_plot.text(0, 0, f'Total time: {analysis.time.sum()} ms')
+
+    plt.show()
 
 
 if __name__ == '__main__':
