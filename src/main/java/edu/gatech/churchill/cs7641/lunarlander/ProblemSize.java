@@ -47,11 +47,11 @@ public enum ProblemSize {
             return singleAgentDomain;
         }
     ),
-    LARGE(0.1, 200, 0.2, 5.0, new DecayingEpsilonGreedy(1.0, 0.999),
+    LARGE(0.8, 500, 0.95, 1.0, new DecayingEpsilonGreedy(1.0, 0.999),
         () -> {
             return new LLState(
                     new LLAgent(8, 11, 0),
-                    new LLBlock.LLPad(12, 14, 0, 6, "goal"),
+                    new LLBlock.LLPad(12, 14, 0, 4, "goal"),
                     new LLBlock.LLObstacle(7, 7, 0, 12, "left wall"),
                     new LLBlock.LLObstacle(16, 16, 0, 12, "right wall"),
                     new LLBlock.LLObstacle(7, 16, 12, 12, "ceiling"),

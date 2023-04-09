@@ -7,7 +7,6 @@ import burlap.domain.singleagent.lunarlander.state.LLBlock;
 import burlap.domain.singleagent.lunarlander.state.LLState;
 import burlap.shell.visual.VisualExplorer;
 import burlap.visualizer.Visualizer;
-import edu.gatech.churchill.cs7641.frozenlake.FrozenLakeAnalysis;
 
 import java.io.IOException;
 import java.util.function.Supplier;
@@ -48,7 +47,7 @@ public class LunarLanderExperiment {
     private static void testWorld() {
         LLState initialState = new LLState(
                 new LLAgent(8, 11, 0),
-                new LLBlock.LLPad(12, 14, 0, 6, "goal"),
+                new LLBlock.LLPad(12, 14, 0, 4, "goal"),
                 new LLBlock.LLObstacle(7, 7, 0, 12, "left wall"),
                 new LLBlock.LLObstacle(16, 16, 0, 12, "right wall"),
                 new LLBlock.LLObstacle(7, 16, 12, 12, "ceiling"),
@@ -68,7 +67,6 @@ public class LunarLanderExperiment {
         world.addThrustActionWithThrust(thrust);
         world.setTf(new LandedTerminalFunction(world));
         world.setRf(new GoalProximityRewardFunction(world, initialState.pad));
-
 
         Visualizer vis = LLVisualizer.getVisualizer(world);
         VisualExplorer exp = new VisualExplorer(world.generateDomain(), vis, initialState);
