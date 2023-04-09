@@ -6,13 +6,14 @@ import burlap.behavior.singleagent.auxiliary.valuefunctionvis.ValueFunctionVisua
 import burlap.behavior.valuefunction.ValueFunction;
 import burlap.shell.visual.VisualExplorer;
 import burlap.visualizer.Visualizer;
+import edu.gatech.churchill.cs7641.GeneralAnalysis;
 
 public class LunarLanderAnalysis {
 
     public Policy policy;
     public Episode episode;
     public VisualExplorer gui;
-    public double optimalReward;
+    GeneralAnalysis generalAnalysis;
     public ValueFunction planner;
 
 }

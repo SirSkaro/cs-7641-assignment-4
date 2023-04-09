@@ -1,5 +1,7 @@
 package edu.gatech.churchill.cs7641.lunarlander;
 
+import burlap.behavior.policy.EpsilonGreedy;
+import burlap.behavior.policy.GreedyDeterministicQPolicy;
 import burlap.behavior.policy.Policy;
 import burlap.behavior.policy.PolicyUtils;
 import burlap.behavior.singleagent.learning.tdmethods.QLearning;
@@ -14,7 +16,7 @@ import burlap.mdp.singleagent.environment.SimulatedEnvironment;
 import burlap.mdp.singleagent.oo.OOSADomain;
 import burlap.shell.visual.VisualExplorer;
 import burlap.statehashing.simple.SimpleHashableStateFactory;
-import edu.gatech.churchill.cs7641.DecayingEpsilonGreedy;
+import edu.gatech.churchill.cs7641.*;
 import edu.gatech.churchill.cs7641.frozenlake.FrozenLakeAnalysis;
 
 public class LunarLanderProblem {
@@ -40,10 +42,10 @@ public class LunarLanderProblem {
         int maxIterations = 100;
         double gamma = 0.99;
 
-        ValueIteration planner = new ValueIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxIterations);
+        RecordingValueIteration planner = new RecordingValueIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxIterations);
         Policy policy = planner.planFromState(initialState);
 
-        return createAnalysis(planner, policy);
+        return createAnalysis(planner, policy, planner.getAnalysis());
     }
 
     public LunarLanderAnalysis createPolicyIterationAnalysis() {
@@ -52,36 +54,34 @@ public class LunarLanderProblem {
         int maxPolicyIterations = 100;
         double gamma = 0.99;
 
-        PolicyIteration planner = new PolicyIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxEvaluationIterations, maxPolicyIterations);
+        RecordingPolicyIteration planner = new RecordingPolicyIteration(singleAgentDomain, gamma, hashingFactory, maxDelta, maxEvaluationIterations, maxPolicyIterations);
         Policy policy = planner.planFromState(initialState);
 
-        return createAnalysis(planner, policy);
+        return createAnalysis(planner, policy, planner.getAnalysis());
     }
 
     public LunarLanderAnalysis createQLearningAnalysis() {
-        double gamma = .99;
-        double qInit = 1;
-        double learningRate = .1;
-        DecayingEpsilonGreedy explorationPolicy = new DecayingEpsilonGreedy(1.0, 0.999);
-        int maxNumberOfEpisodes = Integer.MAX_VALUE;
+        double gamma = 1.0;
+        double qInit = 105;
+        double learningRate = 1.0;
+        GreedyDeterministicQPolicy explorationPolicy = new GreedyDeterministicQPolicy();
+        double thresholdDelta = 5.0;
+        int maxNumberOfEpisodes = 20_000;
 
-        QLearning agent = new QLearning(singleAgentDomain, gamma, hashingFactory, qInit, learningRate, explorationPolicy, maxNumberOfEpisodes);
+        RecordingQLearning agent = new RecordingQLearning(singleAgentDomain, gamma, hashingFactory, qInit, learningRate, explorationPolicy, maxNumberOfEpisodes, thresholdDelta);
         explorationPolicy.setSolver(agent);
-        Policy policy = null;
+        Policy policy = agent.planFromState(initialState);
+        //explorationPolicy.resetEpsilon();
 
-        for(int trial = 0; trial < 20000; trial++) {
-            policy = agent.planFromState(initialState);
-            explorationPolicy.resetEpsilon();
-        }
-
-        return createAnalysis(agent, policy);
+        return createAnalysis(agent, policy, agent.getAnalysis());
     }
 
-    private LunarLanderAnalysis createAnalysis(ValueFunction planner, Policy policy) {
+    private LunarLanderAnalysis createAnalysis(ValueFunction planner, Policy policy, GeneralAnalysis generalAnalysis) {
         LunarLanderAnalysis analysis = new LunarLanderAnalysis();
         analysis.planner = planner;
         analysis.policy = policy;
         analysis.episode = PolicyUtils.rollout(policy, simulatedEnvironment);
+        analysis.generalAnalysis = generalAnalysis;
 
         analysis.gui = new VisualExplorer(singleAgentDomain, LLVisualizer.getVisualizer(world), initialState);
 

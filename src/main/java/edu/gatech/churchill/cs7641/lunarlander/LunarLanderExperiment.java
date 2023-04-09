@@ -7,6 +7,10 @@ import burlap.domain.singleagent.lunarlander.state.LLBlock;
 import burlap.domain.singleagent.lunarlander.state.LLState;
 import burlap.shell.visual.VisualExplorer;
 import burlap.visualizer.Visualizer;
+import edu.gatech.churchill.cs7641.frozenlake.FrozenLakeAnalysis;
+
+import java.io.IOException;
+import java.util.function.Supplier;
 
 public class LunarLanderExperiment {
 
@@ -15,7 +19,7 @@ public class LunarLanderExperiment {
     private static final String Q_LEARNING = "QL";
     private static final String OUTPUT_DIRECTORY_PATH = "lunarlander";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //testWorld();
         if(args.length != 2) {
             printUsageMessage();
@@ -25,9 +29,18 @@ public class LunarLanderExperiment {
         LunarLanderProblem problem = new LunarLanderProblem(problemSize);
 
         switch (algorithm) {
-            case Q_LEARNING -> qLearningExperiment(problem);
-            case VALUE_ITERATION -> valueIterationExperiment(problem);
-            case POLICY_ITERATION -> policyIterationExperiment(problem);
+            case Q_LEARNING -> {
+                String filename = String.format("%s/ql",OUTPUT_DIRECTORY_PATH);
+                runExperiment(problem::createQLearningAnalysis, filename);
+            }
+            case VALUE_ITERATION -> {
+                String filename = String.format("%s/vi",OUTPUT_DIRECTORY_PATH);
+                runExperiment(problem::createValueIterationAnalysis, filename);
+            }
+            case POLICY_ITERATION -> {
+                String filename = String.format("%s/pi",OUTPUT_DIRECTORY_PATH);
+                runExperiment(problem::createPolicyIterationAnalysis, filename);
+            }
             default -> printUsageMessage();
         }
     }
@@ -69,25 +82,15 @@ public class LunarLanderExperiment {
         while(true);
     }
 
-    private static void valueIterationExperiment(LunarLanderProblem problem) {
-        LunarLanderAnalysis analysis = problem.createValueIterationAnalysis();
-        analysis.episode.write(String.format("%s/vi",OUTPUT_DIRECTORY_PATH));
+    private static void runExperiment(Supplier<LunarLanderAnalysis> analysisSupplier, String filename) throws IOException {
+        LunarLanderAnalysis analysis = analysisSupplier.get();
+        analysis.episode.write(filename);
 
-        analysis.gui.initGUI();
-    }
-
-    private static void policyIterationExperiment(LunarLanderProblem problem) {
-        LunarLanderAnalysis analysis = problem.createPolicyIterationAnalysis();
-        analysis.episode.write(String.format("%s/pi",OUTPUT_DIRECTORY_PATH));
-
-        analysis.gui.initGUI();
-    }
-
-    private static void qLearningExperiment(LunarLanderProblem problem) {
-        LunarLanderAnalysis analysis = problem.createQLearningAnalysis();
-        analysis.episode.write(String.format("%s/ql", OUTPUT_DIRECTORY_PATH));
-
-        analysis.gui.initGUI();
+        analysis.generalAnalysis.writeToFile(filename);
+        System.out.println("Iterations to converge: " + analysis.generalAnalysis.iterationsToConverge());
+        System.out.println("Reward sequence: " + analysis.episode.rewardSequence);
+        System.out.println("Initial state rewards:" + analysis.generalAnalysis.initialStateRewardPerIteration);
+        //analysis.gui.initGUI();
     }
 
     private static void printUsageMessage() {
