@@ -32,7 +32,7 @@ import java.util.Random;
 public class FrozenLakeProblem {
 
     private static final float NON_GOAL_REWARD = -0.1f;
-    private static final float HAZARD_REWARD = -1f;
+    private static final float HAZARD_REWARD = -15f;
     private static final int GOAL_LOCATION_TYPE = 0;
     private static final int HAZARD_LOCATION_TYPE = 1;
 
