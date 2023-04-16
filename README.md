@@ -12,14 +12,13 @@ Code is located at https://github.com/SirSkaro/cs-7641-assignment-4
     * If using Anaconda/miniconda, you can simply use a command like "conda create -n bchurchill6_assignment1 python=3.10".
     * Otherwise, download a distribution of Python 3.10 manually and use it to run "python -m venv assignment4"
 3) Install requirements. With the base of the project as the working directory, you can run the command "pip install -r requirements.txt"
-4) Import the project into your favorite IDE
 
 ## Running the MDPs - Java
 To run an MDP problem, use the `exec:java` goal in Maven. You will also need to specify the main class and commandline arguments. This project uses the `exec-maven-plugin` 
 tool. Please refer to its documentation for additional information.
 
 ### Frozen Lake
-Execute FrozenLakeExperiment.java via the following command:
+Execute `FrozenLakeExperiment.java` via the following command:
 ```
 mvn compile exec:java -D exec.mainClass="edu.gatech.churchill.cs7641.frozenlake.FrozenLakeExperiment" -D exec.args="VI 11 11"
 ```
@@ -27,33 +26,24 @@ Three arguments are required: the algorithm (VI, PI, or QL) and the world dimens
 when finished: a GUI for the policy and a GUI showing an episode of running the policy.
 
 ### Lunar Lander
-Execute LunarLander.java via the following command:
+Execute `LunarLander.java` via the following command:
 ```
 mvn compile exec:java -D exec.mainClass="edu.gatech.churchill.cs7641.lunarlander.LunarLanderExperiment" -D exec.args="VI small"
 ```
-Two arguments are required: the algorithm (VI, PI, or QL) and the world size.
+Two arguments are required: the algorithm (VI, PI, or QL) and the world size (small or large). 
 
 No other configuration is possible from the commandline. Any other modification will require code changes.
 
 Running an algorithm over a problem outputs a `.csv` file (in the working directory) that the Python script uses to generate plots.
 
-## Running the Graphs - Python
-First, copy any CSV files created from the Java code into the root directory of the Python code.
+## Creating the Plots - Python
+Make sure some `.csv` files were created. This script assumes they are located at the root of the Java code.
 
-Using an interactive interpreter (with your virtual environments), run the following code:
+To create convergence, delta convergence, and time/iteration plots, use the `create_plot` function using one of the `Problem` enums. There is an enum instance
+for each combination of problem and world size. Note the enum is hard-coded for Frozen Lake sizes of 11x11 and 22x22.
+
+Example using an interactive interpreter (with your virtual environments):
 ```python
-from graph import Problem
-import graph
-
-# graph results for 150-Queens
-graph.graph_problem(Problem.N_QUEENS)
-
-# graph results for Four Peaks
-graph.graph_problem(Problem.FOUR_PEAKS)
-
-# graph results for Traveling Salesman
-graph.graph_problem(Problem.TRAVELING_SALESMAN)
-
-#graph results for Neural Network
-graph.graph_nn()
+from main import Problem, create_plot
+create_plot(Problem.FROZEN_LAKE_QL_SMALL)
 ```
